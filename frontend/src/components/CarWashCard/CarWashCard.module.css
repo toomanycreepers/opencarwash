@@ -1,0 +1,10 @@
+.boxWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 10px;
+}
+
+.carWashName {
+    padding-left: 3px;
+}

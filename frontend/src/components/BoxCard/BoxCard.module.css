@@ -1,0 +1,26 @@
+.card {
+    width: 100%;
+    height: 108px;
+    border-radius: 8px;
+    background: #F3FAFB;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    cursor: pointer;
+}
+
+.cardName {
+    opacity: .8;
+    font-weight: 600;
+    font-size: 24px;
+    width: 96%;
+    margin: 0 auto;
+}
+
+.timeLine {
+    width: 96%;
+    height: 10px;
+    border-radius: 10px;
+    background: #EBF2F3;
+    margin: 0 auto;
+}
