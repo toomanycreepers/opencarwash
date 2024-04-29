@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -36,6 +37,8 @@ public class User {
     @Lob
     private Byte[] picture;
 
+    private String salt;
+
     @ManyToMany
     @JoinTable(
         name = "users_roles",
@@ -43,4 +46,15 @@ public class User {
         inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private Set<Role> userRoles = new HashSet<>();
+
+    public void setPassword(String password) {
+        generateSalt();
+        password = BCrypt.hashpw(password, salt);
+        this.password = password;
+    }
+
+    private void generateSalt(){
+        if (this.salt==null)
+            this.salt= BCrypt.gensalt();
+    }
 }

@@ -22,11 +22,8 @@ public class Order {
     @NonNull
     private LocalDateTime startTime;
 
-
-    @NonNull
     private Short rating;
 
-    @NonNull
     private String feedback;
 
     @NonNull

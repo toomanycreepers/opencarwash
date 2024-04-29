@@ -18,9 +18,6 @@ public class Carwash {
     private UUID id;
 
     @NonNull
-    private String name;
-
-    @NonNull
     private String city;
 
     @NonNull
