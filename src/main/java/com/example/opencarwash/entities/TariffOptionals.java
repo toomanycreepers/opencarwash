@@ -9,21 +9,22 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Entity
 @Getter
-@Table(name = "carwash_services")
-public class CarwashService {
+@Table(name = "tariffs_services")
+public class TariffOptionals {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @NonNull
-    private String name;
+    private Boolean isOptional;
 
     @NonNull
-    private Integer price;
+    @ManyToOne
+    @JoinColumn(name = "tariff_id")
+    private Tariff tariff;
 
     @NonNull
-    private String description;
-
-    @NonNull
-    private Short duration;
+    @ManyToOne
+    @JoinColumn(name = "service_id")
+    private CwService service;
 }

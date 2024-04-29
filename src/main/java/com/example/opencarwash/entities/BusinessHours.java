@@ -2,6 +2,7 @@ package com.example.opencarwash.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.Check;
 
 import java.time.LocalTime;
 import java.util.UUID;
@@ -17,15 +18,20 @@ public class BusinessHours {
     private UUID id;
 
     @NonNull
+    @Setter
     private LocalTime openingTime;
 
     @NonNull
+    @Setter
     private LocalTime closingTime;
 
     @NonNull
-    private Byte weekday;
+    @Column(name = "weekday")
+    @Check(name = "weekday_range",constraints = "weekday BETWEEN 1 AND 7")
+    private Integer weekday;
 
     @NonNull
+    @Setter
     private Boolean isClosed;
 
     @NonNull

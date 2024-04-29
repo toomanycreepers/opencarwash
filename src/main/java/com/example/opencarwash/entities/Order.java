@@ -1,6 +1,6 @@
 package com.example.opencarwash.entities;
 
-import com.example.opencarwash.utils.OrderState;
+import com.example.opencarwash.utils.enums.OrderState;
 import jakarta.persistence.*;
 import lombok.*;
 
