@@ -8,6 +8,7 @@ import org.hibernate.annotations.Check;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
+import java.util.function.Predicate;
 
 @RequiredArgsConstructor
 @NoArgsConstructor
@@ -48,4 +49,20 @@ public class Box {
 
     @OneToMany(mappedBy = "box")
     private Set<ScheduledShutdown> shutdowns = new HashSet<>();
+
+    public boolean addTariff(Tariff tariff){
+        if (tariffs.contains(tariff)){
+            return false;
+        }
+        tariffs.add(tariff);
+        return true;
+    }
+
+    public boolean removeTariff(Tariff tariff){
+        if (!tariffs.contains(tariff)){
+            return false;
+        }
+        tariffs.remove(tariff);
+        return true;
+    }
 }

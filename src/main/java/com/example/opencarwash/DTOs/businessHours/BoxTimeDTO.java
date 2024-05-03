@@ -1,4 +1,4 @@
-package com.example.opencarwash.dtos;
+package com.example.opencarwash.dtos.businessHours;
 
 import lombok.AllArgsConstructor;
 

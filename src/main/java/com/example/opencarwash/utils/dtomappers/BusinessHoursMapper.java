@@ -1,6 +1,6 @@
 package com.example.opencarwash.utils.dtomappers;
 
-import com.example.opencarwash.dtos.BoxTimeDTO;
+import com.example.opencarwash.dtos.businessHours.BoxTimeDTO;
 import com.example.opencarwash.dtos.BoxWorkWeekTimeDTO;
 import com.example.opencarwash.entities.Box;
 import com.example.opencarwash.entities.BusinessHours;

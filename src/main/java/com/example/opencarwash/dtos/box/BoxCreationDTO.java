@@ -1,10 +1,10 @@
-package com.example.opencarwash.dtos;
+package com.example.opencarwash.dtos.box;
 
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 public class BoxCreationDTO {
-    public int number;
-    public int workWeekType;
+    public Integer number;
+    public Integer workWeekType;
     public String carwashId;
 }
