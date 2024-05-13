@@ -1,6 +1,7 @@
 package com.example.opencarwash.config;
 
 import com.example.opencarwash.security.JWTAuthFilter;
+import com.example.opencarwash.services.UserDetailServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,7 +22,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
     @Autowired
-    private UserService userService;
+    private UserDetailServiceImpl userDetailService;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -70,6 +71,7 @@ public class SecurityConfig {
     public DaoAuthenticationProvider daoAuthenticationProvider() {
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
         daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
-        daoAuthenticationProvider.setUserDetailsService(userService);
+        daoAuthenticationProvider.setUserDetailsService(userDetailService);
         return daoAuthenticationProvider;
     }
+}

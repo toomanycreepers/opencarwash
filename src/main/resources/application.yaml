@@ -9,7 +9,7 @@ server:
 spring:
   config:
     activate:
-      on-profile: dev
+      on-profile: test
   h2:
     console:
       enabled: true

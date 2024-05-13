@@ -18,8 +18,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 
 public class JWTAuthFilter extends OncePerRequestFilter {
-    private static final Logger logger = LoggerFactory
-            .getLogger(JWTAuthFilter.class);
+
     @Autowired
     private JWTService jwtService;
     @Autowired
@@ -45,11 +44,10 @@ public class JWTAuthFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         } catch (Exception e) {
-            logger.error("Cannot set user authentication: {}", e);
+            System.out.println("Cannot set user authentication: {}" + e.getMessage());
         }
 
         filterChain.doFilter(request, response);
-//        System.out.println(SecurityContextHolder.getContext().getAuthentication().getName());
     }
 
     private String parseJwt(HttpServletRequest request) {
