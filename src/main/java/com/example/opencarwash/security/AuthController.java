@@ -1,6 +1,7 @@
 package com.example.opencarwash.security;
 
 import com.example.opencarwash.dtos.UserCreationDTO;
+import com.example.opencarwash.dtos.user.UserDTO;
 import com.example.opencarwash.utils.customExceptions.AlreadyPresentException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -60,4 +61,22 @@ public class AuthController {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
     }
+
+    @GetMapping("/current")
+    public ResponseEntity<UserDTO> getCurrent(){
+        try{
+            UserDTO user = authService.getCurrent();
+            return new ResponseEntity<>(user, HttpStatus.OK);
+        }
+        catch(Exception e){
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<HttpStatus> logout(HttpServletResponse response){
+        authService.logout(response);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 }

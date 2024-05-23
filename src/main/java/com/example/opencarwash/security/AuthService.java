@@ -1,20 +1,26 @@
 package com.example.opencarwash.security;
 
+import com.example.opencarwash.dtos.user.UserDTO;
 import com.example.opencarwash.repositories.UserRepository;
 import com.example.opencarwash.services.UserDetailServiceImpl;
 import com.example.opencarwash.dtos.UserCreationDTO;
 import com.example.opencarwash.entities.User;
 import com.example.opencarwash.utils.customExceptions.AlreadyPresentException;
+import com.example.opencarwash.utils.customExceptions.UnauthorizedException;
 import com.example.opencarwash.utils.dtomappers.UserMapper;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.nio.file.attribute.UserPrincipalNotFoundException;
+import java.util.NoSuchElementException;
 
 @Service
 public class AuthService {
@@ -60,20 +66,48 @@ public class AuthService {
             for (Cookie cookie : cookies)
                 if ("refreshToken".equals(cookie.getName())) {
                     String refreshToken = cookie.getValue();
-                    try {
-                        String username = jwtService.getUsernameFromJwtToken(refreshToken);
+                        if(jwtService.isValid(refreshToken)) {
+                            String username = jwtService.getUsernameFromJwtToken(refreshToken);
 
-                        UserDetailsImpl userDetails = (UserDetailsImpl) userDetailService.loadUserByUsername(username);
-                        AccessTokenDTO newJwtAccessToken = new AccessTokenDTO(jwtService.generateJwtAccessToken(userDetails));
+                            UserDetailsImpl userDetails = (UserDetailsImpl) userDetailService.loadUserByUsername(username);
+                            AccessTokenDTO newJwtAccessToken = new AccessTokenDTO(jwtService.generateJwtAccessToken(userDetails));
 
-                        System.out.println("New access token created successfully");
-                        return newJwtAccessToken;
-                    } catch (Exception ex) {
+                            System.out.println("New access token created successfully");
+                            return newJwtAccessToken;
+                        }
+                    else {
                         System.out.println("Refresh token is not valid");
-                        throw ex;
                     }
                 }
         }
         return null;
+    }
+
+    public UserDTO getCurrent() throws UnauthorizedException, NoSuchElementException{
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication != null && authentication.getPrincipal() instanceof UserDetailsImpl) {
+            UserDetailsImpl userDetails = (UserDetailsImpl)authentication.getPrincipal();
+            String userName = userDetails.getUsername();
+
+            User user = repo.findByPhoneNumber(userName).orElseThrow(
+                    () -> new NoSuchElementException("User that specified in token does not exists.")
+            );
+            return UserMapper.mapToDTO(user);
+        }
+
+        throw new UnauthorizedException("User not authenticated or authentication invalid format.");
+    }
+
+    public void logout(HttpServletResponse response){
+        response.setHeader("Authorization", null);
+
+        Cookie emptyCookie = new Cookie("refreshToken", null);
+        emptyCookie.setPath("/");
+        emptyCookie.setHttpOnly(true);
+        emptyCookie.setMaxAge(0);
+        response.addCookie(emptyCookie);
+
+        SecurityContextHolder.clearContext();
     }
 }

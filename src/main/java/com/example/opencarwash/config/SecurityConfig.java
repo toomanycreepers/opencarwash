@@ -42,12 +42,6 @@ public class SecurityConfig {
                 .addFilterBefore(jwtAuthFilter(),
                         UsernamePasswordAuthenticationFilter.class)
 
-                .logout(logout -> logout
-                        .invalidateHttpSession(true)
-                        .clearAuthentication(true)
-                        .logoutUrl("/logout")
-                        .logoutSuccessUrl("/view"))
-
                 .build();
     }
 

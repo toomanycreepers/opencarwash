@@ -38,7 +38,7 @@ public class BoxService {
     }
 
     public void setOpTimeForWorkWeek(BoxWorkWeekTimeDTO dto) throws NoSuchElementException {
-        Box box = findById(dto.boxId);
+        Box box = findById(UUID.fromString(dto.boxId));
 
         int workingDays = box.getWorkWeekType().getDaysWorking();
         Set<BusinessHours> days = new HashSet<>();
@@ -69,13 +69,13 @@ public class BoxService {
     }
 
     public void setOpTimeForDay(BoxTimeDTO dto) throws NoSuchElementException {
-        Box box = findById(dto.boxId);
+        Box box = findById(UUID.fromString(dto.boxId));
         BusinessHours opTime = BusinessHoursMapper.mapFromBusinessHoursDTO(dto,box);
         timeRepo.save(opTime);
     }
 
     public void updateNumber(NumberDTO dto) throws NoSuchElementException {
-        Box box = findById(dto.boxId);
+        Box box = findById(UUID.fromString(dto.boxId));
         box.setNumber(dto.number);
         repo.save(box);
     }

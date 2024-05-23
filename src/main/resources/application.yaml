@@ -31,6 +31,31 @@ spring:
 ---
 
 spring:
+  config:
+    activate:
+      on-profile: dev
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/opencarwash
+    driverClassName: org.postgresql.Driver
+    username: postgres
+    password: 12345
+
+  jpa:
+    show-sql: true
+    hibernate:
+      dialect: org.hibernate.dialect.PostgreSQLDialect
+      ddl-auto: validate
+
+  security:
+    jwt:
+      expirationAccessMs: 3600000
+      expirationRefreshMs: 2952000000
+      secret: secret
+
+---
+
+spring:
   profiles:
     active:
       dev

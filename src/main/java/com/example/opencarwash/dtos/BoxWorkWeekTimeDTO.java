@@ -7,7 +7,7 @@ import java.util.UUID;
 
 @AllArgsConstructor
 public class BoxWorkWeekTimeDTO {
-    public UUID boxId;
+    public String boxId;
     public LocalTime openingTime;
     public LocalTime closingTime;
 }

@@ -15,10 +15,10 @@ public class JWTService {
             .getLogger(JWTService.class);
 
     @Value("${spring.security.jwt.expirationAccessMs}")
-    private int jwtExpirationAccessMs;
+    private long jwtExpirationAccessMs;
 
-    @Value("${spring.security.jwt.expirationAccessMs}")
-    private int jwtExpirationRefreshMs;
+    @Value("${spring.security.jwt.expirationRefreshMs}")
+    private long jwtExpirationRefreshMs;
     @Value("${spring.security.jwt.secret}")
     private String jwtSecret;
 
