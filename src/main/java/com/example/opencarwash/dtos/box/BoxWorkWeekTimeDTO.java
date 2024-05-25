@@ -1,4 +1,4 @@
-package com.example.opencarwash.dtos;
+package com.example.opencarwash.dtos.box;
 
 import lombok.AllArgsConstructor;
 

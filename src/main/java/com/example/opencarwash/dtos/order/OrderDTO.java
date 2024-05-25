@@ -1,5 +1,8 @@
 package com.example.opencarwash.dtos.order;
 
+import lombok.AllArgsConstructor;
+
+@AllArgsConstructor
 public class OrderDTO {
     public String id;
     public String clientId;

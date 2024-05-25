@@ -1,7 +1,7 @@
 package com.example.opencarwash.services;
 
 import com.example.opencarwash.dtos.businessHours.BoxTimeDTO;
-import com.example.opencarwash.dtos.BoxWorkWeekTimeDTO;
+import com.example.opencarwash.dtos.box.BoxWorkWeekTimeDTO;
 import com.example.opencarwash.dtos.box.BoxCreationDTO;
 import com.example.opencarwash.dtos.box.BoxDTO;
 import com.example.opencarwash.dtos.box.BoxTariffIdDTO;

@@ -1,4 +1,4 @@
-package com.example.opencarwash.dtos;
+package com.example.opencarwash.dtos.carwashService;
 
 public class CwServiceDescriptionDTO {
     public String id;

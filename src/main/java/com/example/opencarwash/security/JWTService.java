@@ -4,6 +4,7 @@ import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -26,7 +27,7 @@ public class JWTService {
         return Jwts.builder()
                 .setSubject((authentication.getUsername()))
                 .claim("roles", authentication.getAuthorities().stream()
-                        .map(role -> role.getAuthority())
+                        .map(GrantedAuthority::getAuthority)
                         .collect(Collectors.toList()))
                 .setIssuedAt(new Date())
                 .setExpiration(new Date((new Date()).getTime() + jwtExpirationAccessMs))
@@ -38,7 +39,7 @@ public class JWTService {
         return Jwts.builder()
                 .setSubject((authentication.getUsername()))
                 .claim("roles", authentication.getAuthorities().stream()
-                        .map(role -> role.getAuthority())
+                        .map(GrantedAuthority::getAuthority)
                         .collect(Collectors.toList()))
                 .setIssuedAt(new Date())
                 .setExpiration(new Date((new Date()).getTime() + jwtExpirationRefreshMs))

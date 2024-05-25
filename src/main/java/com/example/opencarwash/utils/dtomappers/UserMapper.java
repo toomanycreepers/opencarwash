@@ -4,7 +4,7 @@ import com.example.opencarwash.dtos.UserCreationDTO;
 import com.example.opencarwash.entities.User;
 
 
-public class UserMapper {
+public final class UserMapper {
     private UserMapper(){}
 
     public static User mapFromDTO(UserCreationDTO dto){

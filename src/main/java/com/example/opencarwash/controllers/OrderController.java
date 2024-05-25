@@ -1,12 +1,13 @@
 package com.example.opencarwash.controllers;
 
 import com.example.opencarwash.dtos.order.*;
+import com.example.opencarwash.services.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -38,17 +39,6 @@ public class OrderController {
         }
     }
 
-    @PutMapping("/time")
-    public ResponseEntity<HttpStatus> updateStartTime(@RequestBody StartTimeDTO dto){
-        try{
-            service.updateStartTime(dto);
-            return new ResponseEntity<>(HttpStatus.OK);
-        }
-        catch(Exception e){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-    }
-
     @PutMapping("/rating")
     public ResponseEntity<HttpStatus> setRating(@RequestBody RatingDTO dto){
         try{
@@ -63,7 +53,7 @@ public class OrderController {
     @PutMapping("/feedback")
     public ResponseEntity<HttpStatus> setFeedback(@RequestBody FeedbackDTO dto){
         try{
-            service.setFeedBack(dto);
+            service.setFeedback(dto);
             return new ResponseEntity<>(HttpStatus.OK);
         }
         catch(Exception e){
@@ -72,18 +62,18 @@ public class OrderController {
     }
 
     @PutMapping("/removeFeedback/{orderId}")
-    public ResponseEntity<HttpStatus> setFeedback(@PathVariable UUID id){
+    public ResponseEntity<HttpStatus> removeFeedback(@PathVariable UUID id){
         try{
-            service.removeFeedBack(id);
+            service.removeFeedback(id);
             return new ResponseEntity<>(HttpStatus.OK);
         }
         catch(Exception e){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
-
-    @PutMapping("/addPhoto")
-    public ResponseEntity<HttpStatus> addPhoto(){
+//TODO
+/*    @PutMapping("/addPhoto")
+    public ResponseEntity<HttpStatus> addPhoto(@RequestBody PhotoDTO dto){
         try{
             service.addPhoto(dto);
             return new ResponseEntity<>(HttpStatus.OK);
@@ -91,9 +81,9 @@ public class OrderController {
         catch(Exception e){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-    }
-
-    @PutMapping("/removePhoto")
+    }*/
+//TODO
+/*    @PutMapping("/removePhoto")
     public ResponseEntity<HttpStatus> removePhoto(@RequestBody PhotoDTO dto){
         try{
             service.removePhoto(dto);
@@ -102,9 +92,9 @@ public class OrderController {
         catch(Exception e){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-    }
-
-    @GetMapping("/photos/{id}")
+    }*/
+//TODO
+/*    @GetMapping("/photos/{id}")
     @ResponseBody
     public ResponseEntity<ArrayList<PhotoDTO>> getPhotos(@PathVariable UUID id){
         try{
@@ -114,13 +104,13 @@ public class OrderController {
         catch(Exception e){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-    }
+    }*/
 
     @GetMapping("/{id}")
     @ResponseBody
     public ResponseEntity<OrderDTO> getById(@PathVariable UUID id){
         try{
-            OrderDTO order = service.getById(id);
+            OrderDTO order = service.getDTOById(id);
             return new ResponseEntity<>(order, HttpStatus.OK);
         }
         catch(Exception e){
@@ -130,9 +120,9 @@ public class OrderController {
 
     @GetMapping("/box/{boxId}")
     @ResponseBody
-    public ResponseEntity<ArrayList<OrderDTO>> getByBoxId(@PathVariable UUID boxId){
+    public ResponseEntity<List<OrderDTO>> getByBoxId(@PathVariable UUID boxId){
         try{
-            ArrayList<OrderDTO> orders = service.getByBoxId(boxId);
+            List<OrderDTO> orders = service.getByBoxId(boxId);
             return new ResponseEntity<>(orders, HttpStatus.OK);
         }
         catch(Exception e){
@@ -142,9 +132,9 @@ public class OrderController {
 
     @PostMapping("/dateBox")
     @ResponseBody
-    public ResponseEntity<ArrayList<OrderDTO>> getByBoxDate(@RequestBody DateBoxDTO dto){
+    public ResponseEntity<List<OrderDTO>> getByBoxDate(@RequestBody DateBoxDTO dto){
         try{
-            ArrayList<OrderDTO> orders = service.getByDateBox(dto);
+            List<OrderDTO> orders = service.getByDateBox(dto);
             return new ResponseEntity<>(orders, HttpStatus.OK);
         }
         catch(Exception e){

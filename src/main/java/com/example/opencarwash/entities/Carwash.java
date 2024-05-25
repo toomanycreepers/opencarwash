@@ -1,5 +1,7 @@
 package com.example.opencarwash.entities;
 
+import com.example.opencarwash.utils.customExceptions.AbsentFromCollectionException;
+import com.example.opencarwash.utils.customExceptions.AlreadyPresentException;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -18,15 +20,18 @@ public class Carwash {
     private UUID id;
 
     @NonNull
+    @Setter
     private String city;
 
     @NonNull
+    @Setter
     private String street;
 
     @NonNull
+    @Setter
     private String building;
 
-    @NonNull
+    @Setter
     private Short timeslotLengthMinutes;
 
     @NonNull
@@ -41,4 +46,18 @@ public class Carwash {
         inverseJoinColumns = @JoinColumn(name = "user_id")
     )
     private Set<User> employees = new HashSet<>();
+
+    public void addEmployee(User employee) throws AlreadyPresentException{
+        if (employees.contains(employee)){
+            throw new AlreadyPresentException("User already exists in this context.");
+        }
+        employees.add(employee);
+    }
+
+    public void removeEmployee(User employee) throws AbsentFromCollectionException {
+        if (!employees.contains(employee)){
+            throw new AbsentFromCollectionException("No such user in this context.");
+        }
+        employees.remove(employee);
+    }
 }

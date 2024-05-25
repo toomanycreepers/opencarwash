@@ -1,6 +1,7 @@
 package com.example.opencarwash.controllers;
 
-import com.example.opencarwash.dtos.carwash.CarwashCreationDTO;
+import com.example.opencarwash.dtos.carwashService.CwServiceDescriptionDTO;
+import com.example.opencarwash.dtos.carwashService.CwServiceCreationDTO;
 import com.example.opencarwash.dtos.carwashService.*;
 import com.example.opencarwash.services.CwServiceService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -18,9 +20,9 @@ public class CarwashServiceController {
     private CwServiceService service;
 
     @PostMapping
-    public ResponseEntity<HttpStatus> create(@RequestBody CarwashCreationDTO dto){
+    public ResponseEntity<HttpStatus> create(@RequestBody CwServiceCreationDTO dto){
         try{
-            service.create(dto);
+            service.addCwService(dto);
             return new ResponseEntity<>(HttpStatus.CREATED);
         }
         catch(Exception e){
@@ -51,9 +53,9 @@ public class CarwashServiceController {
     }
 
     @PutMapping("/description")
-    public ResponseEntity<HttpStatus> updateDescription(@RequestBody DescriptionDTO dto){
+    public ResponseEntity<HttpStatus> updateDescription(@RequestBody CwServiceDescriptionDTO dto){
         try{
-            service.updateDescription(dto);
+            service.changeDescription(dto);
             return new ResponseEntity<>(HttpStatus.OK);
         }
         catch(Exception e){
@@ -74,12 +76,24 @@ public class CarwashServiceController {
 
     @GetMapping("/{id}")
     @ResponseBody
-    public ResponseEntity<CarwashServiceDTO> getById(@PathVariable UUID id){
+    public ResponseEntity<CwServiceDTO> getById(@PathVariable UUID id){
         try{
-            CarwashServiceDTO carwashService = service.getById(id);
+            CwServiceDTO carwashService = service.getDTOById(id);
             return new ResponseEntity<>(carwashService, HttpStatus.OK);
         }
         catch(Exception e){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/cw/{carwashId}")
+    @ResponseBody
+    public ResponseEntity<List<CwServiceDTO>> getAllByCarwashId(@PathVariable UUID carwashId){
+        try{
+            List<CwServiceDTO> services = service.getByCarwashId(carwashId);
+            return new ResponseEntity<>(services, HttpStatus.OK);
+        }
+        catch (Exception e){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }

@@ -1,10 +1,7 @@
 package com.example.opencarwash.entities;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 import java.util.UUID;
 
@@ -19,10 +16,12 @@ public class Franchise {
     private UUID id;
 
     @NonNull
+    @Setter
     private String name;
 
     @NonNull
     @ManyToOne
     @JoinColumn(name = "owner_id")
+    @Setter
     private User owner;
 }
