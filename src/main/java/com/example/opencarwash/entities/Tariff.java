@@ -25,11 +25,9 @@ public class Tariff {
     @Setter
     private String description;
 
-    @NonNull
     @Setter
     private String commentForEmployees;
 
-    @NonNull
     @Setter
     private Short bufferTime;
 

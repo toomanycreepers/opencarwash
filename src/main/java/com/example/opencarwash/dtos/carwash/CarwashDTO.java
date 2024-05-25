@@ -1,8 +1,10 @@
 package com.example.opencarwash.dtos.carwash;
 
-import java.util.ArrayList;
-import java.util.UUID;
+import lombok.AllArgsConstructor;
 
+import java.util.List;
+
+@AllArgsConstructor
 public class CarwashDTO {
 
     public String id;
@@ -15,5 +17,5 @@ public class CarwashDTO {
 
     public String building;
 
-    public ArrayList<String> employeeIds;
+    public List<String> employeeIds;
 }

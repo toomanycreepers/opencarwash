@@ -1,5 +1,6 @@
 package com.example.opencarwash.controllers;
 
+import com.example.opencarwash.dtos.franchise.FranchiseCreationDTO;
 import com.example.opencarwash.dtos.franchise.FranchiseDTO;
 import com.example.opencarwash.dtos.franchise.NameDTO;
 import com.example.opencarwash.dtos.franchise.OwnerDTO;
@@ -19,21 +20,21 @@ public class FranchiseController {
     private FranchiseService service;
 
     @PostMapping
-    public ResponseEntity<HttpStatus> create(@RequestBody FranchiseDTO dto){
+    public ResponseEntity<HttpStatus> create(@RequestBody FranchiseCreationDTO dto){
         try{
             service.create(dto);
             return new ResponseEntity<>(HttpStatus.OK);
         }
         catch(Exception e){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        };
+        }
     }
 
     @GetMapping("/{name}")
     @ResponseBody
     public ResponseEntity<FranchiseDTO> getByName(@PathVariable String name){
         try{
-            FranchiseDTO franchise = service.getByName(dto);
+            FranchiseDTO franchise = service.getByName(name);
             return new ResponseEntity<>(franchise, HttpStatus.OK);
         }
         catch(Exception e){

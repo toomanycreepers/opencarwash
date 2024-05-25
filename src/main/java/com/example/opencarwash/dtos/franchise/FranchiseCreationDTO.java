@@ -1,4 +1,4 @@
-package com.example.opencarwash.dtos;
+package com.example.opencarwash.dtos.franchise;
 
 public class FranchiseCreationDTO {
     public String name;

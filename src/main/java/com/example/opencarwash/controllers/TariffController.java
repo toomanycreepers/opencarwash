@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -20,7 +20,7 @@ public class TariffController {
     @PostMapping
     public ResponseEntity<HttpStatus> create(@RequestBody TariffCreationDTO dto){
         try{
-            service.create(dto);
+            service.addTariff(dto);
             return new ResponseEntity<>(HttpStatus.CREATED);
         }
         catch(Exception e){
@@ -98,20 +98,8 @@ public class TariffController {
     @ResponseBody
     public ResponseEntity<TariffDTO> getById(@PathVariable UUID id){
         try{
-            TariffDTO tariff = service.getById(id);
+            TariffDTO tariff = service.getDTOById(id);
             return new ResponseEntity<>(tariff, HttpStatus.OK);
-        }
-        catch(Exception e){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    @GetMapping("/box/{boxId}")
-    @ResponseBody
-    public ResponseEntity<ArrayList<TariffDTO>> getByBoxId(@PathVariable UUID boxId){
-        try{
-            ArrayList<TariffDTO> tariffs = service.getByBoxId(boxId);
-            return new ResponseEntity<>(tariffs, HttpStatus.OK);
         }
         catch(Exception e){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

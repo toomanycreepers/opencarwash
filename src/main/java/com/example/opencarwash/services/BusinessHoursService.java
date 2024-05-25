@@ -5,14 +5,12 @@ import com.example.opencarwash.dtos.businessHours.OpenClosingTimeDTO;
 import com.example.opencarwash.entities.Box;
 import com.example.opencarwash.entities.BusinessHours;
 import com.example.opencarwash.repositories.BusinessHoursRepository;
+import com.example.opencarwash.utils.dtomappers.BusinessHoursMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalTime;
-import java.util.HashSet;
-import java.util.NoSuchElementException;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class BusinessHoursService {
@@ -47,5 +45,36 @@ public class BusinessHoursService {
         bh.setOpeningTime(newOpenTime);
         bh.setClosingTime(newClosingTime);
         repo.save(bh);
+    }
+
+    public void changeCarwashClosedStatus(UUID boxId, boolean isClosed){
+        var workdays = repo.findAllByBoxId(boxId);
+        for (BusinessHours bh : workdays){
+            bh.setIsClosed(isClosed);
+        }
+        repo.saveAll(workdays);
+    }
+
+    public BusinessHoursDTO getDTOById(UUID id) throws NoSuchElementException{
+        BusinessHours bh = findById(id);
+        return BusinessHoursMapper.mapToBusinessHoursDTO(bh);
+    }
+
+    public void remove(UUID id) throws NoSuchElementException{
+        if (repo.existsById(id)){
+            repo.deleteById(id);
+            return;
+        }
+        throw new NoSuchElementException("No element by that id.");
+    }
+
+    public Set<BusinessHoursDTO> getByBoxId(UUID boxId){
+        Set<BusinessHours> entitySet = repo.findAllByBoxId(boxId);
+        Set<BusinessHoursDTO> dtoSet = new HashSet<>();
+        for (BusinessHours entity : entitySet){
+            BusinessHoursDTO dto = BusinessHoursMapper.mapToBusinessHoursDTO(entity);
+            dtoSet.add(dto);
+        }
+        return dtoSet;
     }
 }

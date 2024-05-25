@@ -8,11 +8,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
+import java.util.NoSuchElementException;
+import java.util.Set;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/busHours")
+@RequestMapping("/bHrs")
 public class BusinessHoursController {
 
     @Autowired
@@ -29,10 +30,10 @@ public class BusinessHoursController {
         }
     }
 
-    @PutMapping("/close/{id}")
-    public ResponseEntity<HttpStatus> close(@PathVariable UUID id){
+    @PutMapping("/close/{boxId}")
+    public ResponseEntity<HttpStatus> close(@PathVariable UUID boxId){
         try{
-            service.close(id);
+            service.changeCarwashClosedStatus(boxId,true);
             return new ResponseEntity<>(HttpStatus.OK);
         }
         catch(Exception e){
@@ -40,10 +41,10 @@ public class BusinessHoursController {
         }
     }
 
-    @PutMapping("/open/{id}")
-    public ResponseEntity<HttpStatus> open(@PathVariable UUID id){
+    @PutMapping("/open/{boxId}")
+    public ResponseEntity<HttpStatus> open(@PathVariable UUID boxId){
         try{
-            service.open(id);
+            service.changeCarwashClosedStatus(boxId,false);
             return new ResponseEntity<>(HttpStatus.OK);
         }
         catch(Exception e){
@@ -65,10 +66,10 @@ public class BusinessHoursController {
 
     @GetMapping("/box/{id}")
     @ResponseBody
-    public ResponseEntity<ArrayList<BusinessHoursDTO>> getByBoxId(@PathVariable UUID boxId){
+    public ResponseEntity<Set<BusinessHoursDTO>> getByBoxId(@PathVariable UUID boxId){
         try{
-            ArrayList<BusinessHoursDTO> businessHourses = service.getByBoxId(boxId);
-            return new ResponseEntity<>(businessHourses, HttpStatus.OK);
+            Set<BusinessHoursDTO> businessHours = service.getByBoxId(boxId);
+            return new ResponseEntity<>(businessHours, HttpStatus.OK);
         }
         catch(Exception e){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -81,7 +82,7 @@ public class BusinessHoursController {
             service.remove(id);
             return new ResponseEntity<>(HttpStatus.OK);
         }
-        catch(Exception e){
+        catch(NoSuchElementException e){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }

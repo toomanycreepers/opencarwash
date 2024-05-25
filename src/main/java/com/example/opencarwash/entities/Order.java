@@ -22,12 +22,15 @@ public class Order {
     @NonNull
     private LocalDateTime startTime;
 
+    @Setter
     private Short rating;
 
+    @Setter
     private String feedback;
 
     @NonNull
     @Enumerated(value = EnumType.ORDINAL)
+    @Setter
     private OrderState state;
 
     @NonNull
@@ -38,6 +41,7 @@ public class Order {
     @NonNull
     @ManyToOne
     @JoinColumn(name = "box_id")
+    @Setter
     private Box box;
 
     @NonNull

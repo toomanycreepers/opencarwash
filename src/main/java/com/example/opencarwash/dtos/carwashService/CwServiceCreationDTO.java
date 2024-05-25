@@ -1,4 +1,4 @@
-package com.example.opencarwash.dtos;
+package com.example.opencarwash.dtos.carwashService;
 
 import lombok.AllArgsConstructor;
 
@@ -8,4 +8,5 @@ public class CwServiceCreationDTO {
     public Integer price;
     public String description;
     public Short duration;
+    public String carwashId;
 }

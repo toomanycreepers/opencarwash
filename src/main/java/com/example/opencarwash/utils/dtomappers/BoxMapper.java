@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class BoxMapper {
+public final class BoxMapper {
     private BoxMapper(){}
 
     public static BoxDTO toDTO(Box box){

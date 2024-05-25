@@ -30,4 +30,8 @@ public class CwService {
     @NonNull
     @Setter
     private Short duration;
+
+    @NonNull
+    @ManyToOne
+    private Carwash cw;
 }
