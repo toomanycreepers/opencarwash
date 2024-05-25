@@ -4,6 +4,7 @@ import com.example.opencarwash.dtos.user.PhoneNumberDTO;
 import com.example.opencarwash.dtos.user.RoleDTO;
 import com.example.opencarwash.dtos.user.UserDTO;
 import com.example.opencarwash.services.UserService;
+import com.example.opencarwash.utils.dtomappers.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -62,7 +63,8 @@ public class UserController {
     @ResponseBody
     public ResponseEntity<UserDTO> findById(@PathVariable String id){
         try{
-            UserDTO user = service.findById(id);
+            UserDTO user = UserMapper.mapToDTO(service.findById(id));
+
             return new ResponseEntity<>(user, HttpStatus.OK);
         }
         catch(Exception e){

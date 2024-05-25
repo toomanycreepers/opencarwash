@@ -31,7 +31,7 @@ public class BusinessHoursController {
     }
 
     @PutMapping("/close/{boxId}")
-    public ResponseEntity<HttpStatus> close(@PathVariable UUID boxId){
+    public ResponseEntity<HttpStatus> close(@PathVariable String boxId){
         try{
             service.changeCarwashClosedStatus(boxId,true);
             return new ResponseEntity<>(HttpStatus.OK);
@@ -42,7 +42,7 @@ public class BusinessHoursController {
     }
 
     @PutMapping("/open/{boxId}")
-    public ResponseEntity<HttpStatus> open(@PathVariable UUID boxId){
+    public ResponseEntity<HttpStatus> open(@PathVariable String boxId){
         try{
             service.changeCarwashClosedStatus(boxId,false);
             return new ResponseEntity<>(HttpStatus.OK);
@@ -54,7 +54,7 @@ public class BusinessHoursController {
 
     @GetMapping("/{id}")
     @ResponseBody
-    public ResponseEntity<BusinessHoursDTO> getById(@PathVariable UUID id){
+    public ResponseEntity<BusinessHoursDTO> getById(@PathVariable String id){
         try{
             BusinessHoursDTO businessHours = service.getDTOById(id);
             return new ResponseEntity<>(businessHours, HttpStatus.OK);
@@ -66,7 +66,7 @@ public class BusinessHoursController {
 
     @GetMapping("/box/{id}")
     @ResponseBody
-    public ResponseEntity<Set<BusinessHoursDTO>> getByBoxId(@PathVariable UUID boxId){
+    public ResponseEntity<Set<BusinessHoursDTO>> getByBoxId(@PathVariable String boxId){
         try{
             Set<BusinessHoursDTO> businessHours = service.getByBoxId(boxId);
             return new ResponseEntity<>(businessHours, HttpStatus.OK);

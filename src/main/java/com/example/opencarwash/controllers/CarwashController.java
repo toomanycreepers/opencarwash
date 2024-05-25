@@ -39,7 +39,7 @@ public class CarwashController {
         }
     }
 
-    @PutMapping
+    @PutMapping("/timeslot")
     public ResponseEntity<HttpStatus> updateTimeslot(@RequestBody TimeslotLengthMinutesDTO dto){
         try{
             service.updateTimeslot(dto);
@@ -50,7 +50,7 @@ public class CarwashController {
         }
     }
 
-    @PutMapping
+    @PutMapping("/addEmployee")
     public ResponseEntity<HttpStatus> addEmployee(@RequestBody EmployeeDTO dto){
         try{
             service.addEmployee(dto);

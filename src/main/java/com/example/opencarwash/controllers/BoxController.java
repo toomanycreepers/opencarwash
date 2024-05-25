@@ -73,7 +73,7 @@ public class BoxController {
 
     @GetMapping("/id/{id}")
     @ResponseBody
-    public ResponseEntity<BoxDTO> getById(@PathVariable UUID id){
+    public ResponseEntity<BoxDTO> getById(@PathVariable String id){
         try{
             BoxDTO box = service.getDTO(id);
             return new ResponseEntity<>(box, HttpStatus.OK);

@@ -8,6 +8,7 @@ import com.example.opencarwash.repositories.CarwashRepository;
 import com.example.opencarwash.utils.customExceptions.AbsentFromCollectionException;
 import com.example.opencarwash.utils.customExceptions.AlreadyPresentException;
 import com.example.opencarwash.utils.dtomappers.CarwashMapper;
+import com.example.opencarwash.utils.dtomappers.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -78,8 +79,8 @@ public class CarwashService {
             IllegalArgumentException,
             NoSuchElementException {
         Carwash cw = parseAndFindById(dto.carwashId);
-        UUID employeeId = UUID.fromString(dto.employeeId);
-        User employee = userService.findById(employeeId);
+
+        User employee = userService.findById(dto.employeeId);
         cw.addEmployee(employee);
         repo.save(cw);
     }
@@ -90,7 +91,7 @@ public class CarwashService {
             NoSuchElementException {
         Carwash cw = parseAndFindById(dto.carwashId);
         UUID employeeId = UUID.fromString(dto.employeeId);
-        User employee = userService.findById(employeeId);
+        User employee = userService.findById(employeeId.toString());
         cw.removeEmployee(employee);
         repo.save(cw);
     }

@@ -40,13 +40,11 @@ public class OrderService {
             IllegalArgumentException,
             DateTimeParseException,
             NoSuchElementException {
-        UUID uId = UUID.fromString(dto.clientId);
-        UUID bId = UUID.fromString(dto.boxId);
         UUID tId = UUID.fromString(dto.tariffId);
         LocalDateTime start = LocalDateTime.parse(dto.startTime);
-        User client = uService.findById(uId);
+        User client = uService.findById(dto.clientId);
         Tariff tariff = tService.findById(tId);
-        Box box = bService.findById(bId);
+        Box box = bService.findById(dto.boxId);
         Order order = new Order(start,OrderState.PLACED,tariff,box,client);
         repo.save(order);
     }

@@ -33,5 +33,5 @@ public class CwService {
 
     @NonNull
     @ManyToOne
-    private Carwash cw;
+    private Carwash carwash;
 }

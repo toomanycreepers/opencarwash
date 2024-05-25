@@ -27,10 +27,10 @@ public class UserService {
     @Autowired
     private RoleRepository roleRepo;
 
-    public UserDTO findById(String id) throws NoSuchElementException {
+    public User findById(String id) throws NoSuchElementException {
         User user = userRepo.findById(UUID.fromString(id)).orElseThrow(
                 () -> new NoSuchElementException("No such user exists."));
-        return UserMapper.mapToDTO(user);
+        return user;
     }
 
     public UserDTO findByPhoneNumber(String phoneNumber) throws NoSuchElementException {

@@ -17,13 +17,13 @@ public class BusinessHoursService {
     @Autowired
     private BusinessHoursRepository repo;
 
-    public BusinessHours findById(UUID id) throws NoSuchElementException{
-        return repo.findById(id).orElseThrow(
+    public BusinessHours findById(String id) throws NoSuchElementException{
+        return repo.findById(UUID.fromString(id)).orElseThrow(
                 () -> new NoSuchElementException("No working time under this id."));
     }
 
-    public BusinessHours findBusinessHours(UUID boxId, Integer weekDay) throws NoSuchElementException {
-        return repo.findBoxWorkDay(boxId,weekDay).orElseThrow(
+    public BusinessHours findBusinessHours(String boxId, Integer weekDay) throws NoSuchElementException {
+        return repo.findBoxWorkDay(UUID.fromString(boxId),weekDay).orElseThrow(
                 () -> new NoSuchElementException("Box with provided Id does not exist."));
     }
 
@@ -38,7 +38,7 @@ public class BusinessHoursService {
     public void updateTime(OpenClosingTimeDTO dto) throws
             NoSuchElementException,
             IllegalArgumentException{
-        UUID bhId = UUID.fromString(dto.businessHoursId);
+        String bhId = dto.businessHoursId;
         BusinessHours bh = findById(bhId);
         LocalTime newOpenTime = LocalTime.parse(dto.openingTime);
         LocalTime newClosingTime = LocalTime.parse(dto.openingTime);
@@ -47,15 +47,15 @@ public class BusinessHoursService {
         repo.save(bh);
     }
 
-    public void changeCarwashClosedStatus(UUID boxId, boolean isClosed){
-        var workdays = repo.findAllByBoxId(boxId);
+    public void changeCarwashClosedStatus(String boxId, boolean isClosed){
+        var workdays = repo.findAllByBoxId(UUID.fromString(boxId));
         for (BusinessHours bh : workdays){
             bh.setIsClosed(isClosed);
         }
         repo.saveAll(workdays);
     }
 
-    public BusinessHoursDTO getDTOById(UUID id) throws NoSuchElementException{
+    public BusinessHoursDTO getDTOById(String id) throws NoSuchElementException{
         BusinessHours bh = findById(id);
         return BusinessHoursMapper.mapToBusinessHoursDTO(bh);
     }
@@ -68,8 +68,8 @@ public class BusinessHoursService {
         throw new NoSuchElementException("No element by that id.");
     }
 
-    public Set<BusinessHoursDTO> getByBoxId(UUID boxId){
-        Set<BusinessHours> entitySet = repo.findAllByBoxId(boxId);
+    public Set<BusinessHoursDTO> getByBoxId(String boxId){
+        Set<BusinessHours> entitySet = repo.findAllByBoxId(UUID.fromString(boxId));
         Set<BusinessHoursDTO> dtoSet = new HashSet<>();
         for (BusinessHours entity : entitySet){
             BusinessHoursDTO dto = BusinessHoursMapper.mapToBusinessHoursDTO(entity);

@@ -19,7 +19,7 @@ public final class CwServiceMapper {
                 service.getPrice(),
                 service.getDescription(),
                 service.getDuration().intValue(),
-                service.getCw().getId().toString()
+                service.getCarwash().getId().toString()
         );
     }
 }

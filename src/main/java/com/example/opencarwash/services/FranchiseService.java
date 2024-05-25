@@ -63,8 +63,8 @@ public class FranchiseService {
     private User parseIdAndFindOwner(String supposedId) throws
             IllegalArgumentException,
             NoSuchElementException {
-        UUID ownerId = UUID.fromString(supposedId);
-        return userService.findById(ownerId);
+
+        return userService.findById(supposedId);
     }
 
     private Franchise parseIdAndFind(String supposedId) throws
