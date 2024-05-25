@@ -4,6 +4,7 @@ import com.example.opencarwash.dtos.UserCreationDTO;
 import com.example.opencarwash.dtos.user.UserDTO;
 import com.example.opencarwash.entities.User;
 import com.example.opencarwash.entities.Role;
+import com.example.opencarwash.utils.dtomappers.RoleMapper;
 
 import java.util.ArrayList;
 import java.util.stream.Collectors;
@@ -27,6 +28,7 @@ public class UserMapper {
                 user.getPicture(),
                 new ArrayList<>(user.getUserRoles().stream()
                         .map(Role::getAuthority)
+                        .map(RoleMapper::roleNameToNumber)
                         .collect(Collectors.toList())));
     }
 }

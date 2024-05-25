@@ -1,33 +1,31 @@
 package com.example.opencarwash.utils.dtomappers;
 
-import com.example.opencarwash.entities.Role;
-
 import java.util.NoSuchElementException;
 
 public class RoleMapper {
     private RoleMapper(){};
 
-    public static Role numberToRole(int number) throws NoSuchElementException{
+    public static String numberToRoleName(int number) throws NoSuchElementException{
         switch(number){
             case(0):
-                return new Role("ROLE_USER");
+                return "ROLE_USER";
 
             case(1):
-                return new Role("ROLE_EMPLOYEE");
+                return "ROLE_EMPLOYEE";
 
             case(2):
-                return new Role("ROLE_OWNER");
+                return "ROLE_OWNER";
 
             case(3):
-                return new Role("ROLE_GLOBAL_ADMIN");
+                return "ROLE_GLOBAL_ADMIN";
 
             default:
                 throw new NoSuchElementException("This number don't maps to any role");
         }
     }
 
-    public static int roleToNumber(String role){
-        switch(role){
+    public static int roleNameToNumber(String roleName){
+        switch(roleName){
             case("ROLE_USER"):
                 return 0;
 

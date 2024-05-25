@@ -11,5 +11,5 @@ public class UserDTO {
     public String firstName;
     public String lastName;
     public byte[] picture;
-    public ArrayList<String> roles;
+    public ArrayList<Integer> roles;
 }

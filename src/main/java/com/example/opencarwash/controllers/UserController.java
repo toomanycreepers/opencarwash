@@ -6,9 +6,12 @@ import com.example.opencarwash.dtos.user.UserDTO;
 import com.example.opencarwash.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 
@@ -90,5 +93,33 @@ public class UserController {
         }
     }
 
+    @PostMapping("/picture")
+    public ResponseEntity<HttpStatus> setPicture(@RequestParam String userId,
+                                                 @RequestPart("content")MultipartFile picture){
+        try{
+            service.setPicture(userId, picture);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        catch(IOException | NullPointerException e){
+            return new ResponseEntity<>(HttpStatus.UNSUPPORTED_MEDIA_TYPE);
+        }
 
+        catch(NoSuchElementException e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping(value = "picture/{userId}", produces = MediaType.IMAGE_JPEG_VALUE)
+    public ResponseEntity<byte[]> getPicture(@PathVariable String userId){
+        try{
+            byte[] picture = service.getPicture(userId);
+            return new ResponseEntity<>(picture, HttpStatus.OK);
+        }
+        catch(NoSuchElementException e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        catch(IOException e){
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
