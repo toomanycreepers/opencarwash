@@ -30,8 +30,10 @@ public class OrderService {
     @Autowired
     private UserService uService;
 
-    public Order findById(UUID id){
-        return repo.findById(id).orElseThrow(
+    public Order findById(String id) throws
+            NoSuchElementException,
+            IllegalArgumentException {
+        return repo.findById(UUID.fromString(id)).orElseThrow(
                 () -> new NoSuchElementException("Incorrect order id.")
         );
     }
@@ -40,53 +42,63 @@ public class OrderService {
             IllegalArgumentException,
             DateTimeParseException,
             NoSuchElementException {
-        UUID tId = UUID.fromString(dto.tariffId);
         LocalDateTime start = LocalDateTime.parse(dto.startTime);
         User client = uService.findById(dto.clientId);
-        Tariff tariff = tService.findById(tId);
+        Tariff tariff = tService.findById(dto.tariffId);
         Box box = bService.findById(dto.boxId);
         Order order = new Order(start,OrderState.PLACED,tariff,box,client);
         repo.save(order);
     }
 
-    public void remove(UUID id){
-        repo.deleteById(id);
+    public void remove(String id) throws IllegalArgumentException {
+        UUID orderUUID = UUID.fromString(id);
+        if (repo.existsById(orderUUID)) {
+            repo.deleteById(orderUUID);
+            return;
+        }
+        throw new NoSuchElementException("Nothing to delete.");
     }
 
     public void updateState(StateDTO dto) throws
             IllegalArgumentException,
             NoSuchElementException,
             IndexOutOfBoundsException {
-        Order order = parseAndFindById(dto.orderId);
+        Order order = findById(dto.orderId);
         order.setState(OrderState.values()[dto.state]);
         repo.save(order);
     }
 
     public void setRating(RatingDTO dto){
-        Order order = parseAndFindById(dto.orderId);
+        Order order = findById(dto.orderId);
         order.setRating(dto.rating.shortValue());
         repo.save(order);
     }
 
     public void setFeedback(FeedbackDTO dto){
-        Order order = parseAndFindById(dto.ordedrID);
+        Order order = findById(dto.ordedrID);
         order.setFeedback(dto.feedback);
         repo.save(order);
     }
 
-    public void removeFeedback(UUID orderId){
+    public void removeFeedback(String orderId) throws
+            IllegalArgumentException,
+            NoSuchElementException{
         Order order = findById(orderId);
         order.setFeedback(null);
         repo.save(order);
     }
 
-    public OrderDTO getDTOById(UUID id) throws NoSuchElementException{
+    public OrderDTO getDTOById(String id) throws
+            IllegalArgumentException,
+            NoSuchElementException{
         Order order = findById(id);
         return OrderMapper.mapToDTO(order);
     }
 
-    public List<OrderDTO> getByBoxId(UUID boxId){
-        List<Order> orders = repo.findAllByBoxId(boxId);
+    public List<OrderDTO> getByBoxId(String boxId) throws
+            IllegalArgumentException {
+        UUID id = UUID.fromString(boxId);
+        List<Order> orders = repo.findAllByBoxId(id);
         return OrderMapper.mapToDTOList(orders);
     }
 
@@ -97,12 +109,5 @@ public class OrderService {
         UUID boxId = UUID.fromString(dto.boxId);
         List<Order> orders = repo.findByBoxAndDate(boxId, date);
         return OrderMapper.mapToDTOList(orders);
-    }
-
-    private Order parseAndFindById(String supposedId) throws
-            IllegalArgumentException,
-            NoSuchElementException {
-        UUID id = UUID.fromString(supposedId);
-        return findById(id);
     }
 }

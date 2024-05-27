@@ -4,6 +4,7 @@ import com.example.opencarwash.dtos.box.BoxCreationDTO;
 import com.example.opencarwash.dtos.box.BoxDTO;
 import com.example.opencarwash.dtos.box.NumberDTO;
 import com.example.opencarwash.dtos.box.BoxTariffIdDTO;
+import com.example.opencarwash.dtos.tariff.FullTariffDTO;
 import com.example.opencarwash.entities.Box;
 import com.example.opencarwash.services.BoxService;
 import com.example.opencarwash.services.BusinessHoursService;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.UUID;
 
 @RestController
@@ -45,6 +47,16 @@ public class BoxController {
             return new ResponseEntity<>(HttpStatus.OK);
         }
         catch(Exception e){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/{boxId}/tariffs")
+    public ResponseEntity<List<FullTariffDTO>> getBoxTariffs(@PathVariable String boxId){
+        try{
+            return new ResponseEntity<>(service.getTariffsByBox(boxId), HttpStatus.OK);
+        }
+        catch (NoSuchElementException | IllegalArgumentException e){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
@@ -85,7 +97,7 @@ public class BoxController {
 
     @GetMapping("/carwashId/{carwashId}")
     @ResponseBody
-    public ResponseEntity<List<BoxDTO>> getByCarwashId(@PathVariable UUID carwashId){
+    public ResponseEntity<List<BoxDTO>> getByCarwashId(@PathVariable String carwashId){
         try{
             List<BoxDTO> boxes = service.getByCarwashId(carwashId);
             return new ResponseEntity<>(boxes, HttpStatus.OK);
@@ -96,7 +108,7 @@ public class BoxController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<HttpStatus> remove(@PathVariable UUID id){
+    public ResponseEntity<HttpStatus> remove(@PathVariable String id){
         try{
             service.removeById(id);
             return new ResponseEntity<>(HttpStatus.OK);

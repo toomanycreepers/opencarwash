@@ -27,10 +27,11 @@ public class UserService {
     @Autowired
     private RoleRepository roleRepo;
 
-    public User findById(String id) throws NoSuchElementException {
-        User user = userRepo.findById(UUID.fromString(id)).orElseThrow(
+    public User findById(String id) throws
+            NoSuchElementException,
+            IllegalArgumentException {
+        return userRepo.findById(UUID.fromString(id)).orElseThrow(
                 () -> new NoSuchElementException("No such user exists."));
-        return user;
     }
 
     public UserDTO findByPhoneNumber(String phoneNumber) throws NoSuchElementException {
@@ -39,7 +40,9 @@ public class UserService {
         return UserMapper.mapToDTO(user);
     }
 
-    public void removeById(String id) throws NoSuchElementException {
+    public void removeById(String id) throws
+            IllegalArgumentException,
+            NoSuchElementException {
         UUID userId = UUID.fromString(id);
         if (!userRepo.existsById(userId)) {
             throw new NoSuchElementException();
@@ -47,35 +50,35 @@ public class UserService {
         userRepo.deleteById(userId);
     }
 
-    public void updatePhoneNumber(PhoneNumberDTO dto) throws AlreadyPresentException, NoSuchElementException {
+    public void updatePhoneNumber(PhoneNumberDTO dto) throws
+            AlreadyPresentException,
+            NoSuchElementException {
         if (userRepo.existsByPhoneNumber(dto.phoneNumber)) {
-            throw new AlreadyPresentException("User with specified phone number already presents");
+            throw new AlreadyPresentException("User with specified phone number already present.");
         }
 
         User user = userRepo.findById(UUID.fromString(dto.userId)).orElseThrow(
-                () -> new NoSuchElementException("User with specified id does not exists")
+                () -> new NoSuchElementException("User with specified id does not exist.")
         );
         user.setPhoneNumber(dto.phoneNumber);
         userRepo.save(user);
     }
 
-    public void addRole(RoleDTO dto) throws NoSuchElementException, IllegalArgumentException{
-        User user = userRepo.findById(UUID.fromString(dto.userId)).orElseThrow(
-                () -> new NoSuchElementException("User does not exists")
-        );
+    public void addRole(RoleDTO dto) throws
+            NoSuchElementException,
+            IllegalArgumentException {
+        User user = findById(dto.userId);
 
         Role role = roleRepo.findByName(RoleMapper.numberToRoleName(dto.roleNumber)).orElseThrow(
-                () -> new NoSuchElementException("DB doesn't contains this role")
+                () -> new NoSuchElementException("No such role.")
         );
 
         user.getUserRoles().add(role);
         userRepo.save(user);
     }
 
-    public void removeRole(RoleDTO dto) throws NoSuchElementException{
-        User user = userRepo.findById(UUID.fromString(dto.userId)).orElseThrow(
-                () -> new NoSuchElementException("User does not exists")
-        );
+    public void removeRole(RoleDTO dto) throws NoSuchElementException {
+        User user = findById(dto.userId);
 
         Predicate<Role> rolePredicate = role ->
                 role.getName().equals(RoleMapper.numberToRoleName(dto.roleNumber));
@@ -86,7 +89,7 @@ public class UserService {
         }
 
         else{
-            throw new NoSuchElementException("User doesn't have role with number");
+            throw new NoSuchElementException("User doesn't have provided role.");
         }
     }
 
@@ -94,9 +97,7 @@ public class UserService {
             NoSuchElementException,
             NullPointerException,
             IOException {
-        User user = userRepo.findById(UUID.fromString(userId)).orElseThrow(
-                () -> new NoSuchElementException("User with specified id does not exists")
-        );
+        User user = findById(userId);
         if (picture.getContentType() == null) {
             throw new NullPointerException("Empty picture content");
         }
@@ -108,15 +109,11 @@ public class UserService {
 
     public byte[] getPicture(String userId) throws
             NoSuchElementException,
-            IOException{
-        User user = userRepo.findById(UUID.fromString(userId)).orElseThrow(
-                () -> new NoSuchElementException("User with specified id does not exists")
-        );
-
+            IOException {
+        User user = findById(userId);
         if(user.getPicture() == null){
             return new ClassPathResource("src/main/resources/img/default avatar.jpg").getContentAsByteArray();
         }
-
         return user.getPicture();
     }
 }

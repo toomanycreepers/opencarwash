@@ -65,7 +65,7 @@ public class FranchiseController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<HttpStatus> remove(@PathVariable UUID id){
+    public ResponseEntity<HttpStatus> remove(@PathVariable String id){
         try{
             service.remove(id);
             return new ResponseEntity<>(HttpStatus.OK);

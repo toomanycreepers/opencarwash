@@ -22,8 +22,8 @@ public class TariffService {
     @Autowired
     private TariffOptionalsRepository optionalsRepo;
 
-    public Tariff findById(UUID id) throws  NoSuchElementException{
-        return repo.findById(id).orElseThrow(
+    public Tariff findById(String id) throws  NoSuchElementException{
+        return repo.findById(UUID.fromString(id)).orElseThrow(
                 () -> new NoSuchElementException("Incorrect tariff id provided.")
         );
     }
@@ -35,21 +35,25 @@ public class TariffService {
         repo.save(tariff);
         Set<TariffOptionals> servicesToAdd = new HashSet<>(dto.serviceIds.size());
         for (Tuple2<String,Boolean> tuple: dto.serviceIds){
-            UUID serviceId = UUID.fromString(tuple.elem1);
-            CwService service = cwSService.findById(serviceId);
+            CwService service = cwSService.findById(tuple.elem1);
             servicesToAdd.add(new TariffOptionals(tuple.elem2,tariff,service));
         }
         optionalsRepo.saveAll(servicesToAdd);
     }
 
-    public void remove(UUID id){
-        repo.deleteById(id);
+    public void remove(String id) throws IllegalArgumentException {
+        UUID tariffUUID = UUID.fromString(id);
+        if (repo.existsById(tariffUUID)) {
+            repo.deleteById(tariffUUID);
+            return;
+        }
+        throw new NoSuchElementException("Nothing to delete.");
     }
 
     public void updateDescription(DescriptionDTO dto) throws
             NoSuchElementException,
             IllegalArgumentException {
-        Tariff tariff = findById(UUID.fromString(dto.tariffId));
+        Tariff tariff = findById(dto.tariffId);
         tariff.setDescription(dto.description);
         repo.save(tariff);
     }
@@ -57,7 +61,7 @@ public class TariffService {
     public void updateBuffertime(BuffertimeDTO dto) throws
             NoSuchElementException,
             IllegalArgumentException {
-        Tariff tariff = findById(UUID.fromString(dto.tariffId));
+        Tariff tariff = findById(dto.tariffId);
         tariff.setBufferTime(dto.buffertime.shortValue());
         repo.save(tariff);
     }
@@ -65,7 +69,7 @@ public class TariffService {
     public void updateName(NameDTO dto) throws
             NoSuchElementException,
             IllegalArgumentException {
-        Tariff tariff = findById(UUID.fromString(dto.tariffId));
+        Tariff tariff = findById(dto.tariffId);
         tariff.setName(dto.name);
         repo.save(tariff);
     }
@@ -73,8 +77,8 @@ public class TariffService {
     public void addService(ServiceDTO dto) throws
             NoSuchElementException,
             IllegalArgumentException{
-        Tariff tariff = findById(UUID.fromString(dto.tariffId));
-        CwService service = cwSService.findById(UUID.fromString(dto.serviceId));
+        Tariff tariff = findById(dto.tariffId);
+        CwService service = cwSService.findById(dto.serviceId);
         optionalsRepo.save(new TariffOptionals(dto.isOptional, tariff, service));
     }
 
@@ -88,13 +92,20 @@ public class TariffService {
     }
 
     public void updateCommForEmployees(CommForEmployeesDTO dto){
-        Tariff tariff = findById(UUID.fromString(dto.tariffId));
+        Tariff tariff = findById(dto.tariffId);
         tariff.setCommentForEmployees(dto.commentForEmployees);
         repo.save(tariff);
     }
 
-    public TariffDTO getDTOById(UUID id){
-        Tariff tariff = findById(id);
+    public FullTariffDTO getTariffWithServices(String tariffUUID) throws
+            IllegalArgumentException,
+            NoSuchElementException{
+        Tariff tariff = findById(tariffUUID);
+        return TariffMapper.mapToFullDTO(tariff);
+    }
+
+    public TariffDTO getDTOById(String uuid){
+        Tariff tariff = findById(uuid);
         return TariffMapper.mapToDTO(tariff);
     }
 }

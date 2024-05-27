@@ -26,15 +26,19 @@ public class CarwashService {
     @Autowired
     private UserService userService;
 
-    public Carwash findById(UUID cwId) throws NoSuchElementException{
-        return repo.findById(cwId).orElseThrow(() -> new NoSuchElementException("Invalid carwash Id."));
+    public Carwash findById(String cwId) throws
+            NoSuchElementException,
+            IllegalArgumentException{
+        UUID cwUUID = UUID.fromString(cwId);
+        return repo.findById(cwUUID).orElseThrow(
+                () -> new NoSuchElementException("Invalid carwash Id.")
+        );
     }
 
     public void addCarwash(CarwashCreationDTO dto) throws
             IllegalArgumentException,
             NoSuchElementException{
-        UUID franchiseId = UUID.fromString(dto.franchiseId);
-        Franchise franchise = franchiseService.findById(franchiseId);
+        Franchise franchise = franchiseService.findById(dto.franchiseId);
         Carwash carwash = CarwashMapper.mapFromCarwashDTO(dto,franchise);
         repo.save(carwash);
     }
@@ -42,26 +46,32 @@ public class CarwashService {
     public void update(CarwashUpdateDTO dto) throws
             NoSuchElementException,
             IllegalArgumentException {
-        Carwash cw = parseAndFindById(dto.id);
+        Carwash cw = findById(dto.id);
         cw.setBuilding(dto.building);
         cw.setStreet(dto.street);
         cw.setCity(dto.city);
         repo.save(cw);
     }
 
-    public void updateTimeslot(TimeslotLengthMinutesDTO dto){
-        Carwash cw = parseAndFindById(dto.carwashId);
+    public void updateTimeslot(TimeslotLengthMinutesDTO dto) throws
+            NoSuchElementException,
+            IllegalArgumentException{
+        Carwash cw = findById(dto.carwashId);
         cw.setTimeslotLengthMinutes(dto.minutes.shortValue());
         repo.save(cw);
     }
 
-    public CarwashDTO getDTOById(UUID carwashId){
+    public CarwashDTO getDTOById(String carwashId) throws
+            NoSuchElementException,
+            IllegalArgumentException {
         Carwash cw = findById(carwashId);
         return CarwashMapper.mapToCarwashDTO(cw);
     }
 
-    public List<CarwashDTO> getAllByFranchiseId(UUID id){
-        List<Carwash> entities = repo.findAllByFranchiseId(id);
+    public List<CarwashDTO> getAllByFranchiseId(String fId) throws
+            IllegalArgumentException{
+        UUID franchiseUUID = UUID.fromString(fId);
+        List<Carwash> entities = repo.findAllByFranchiseId(franchiseUUID);
         List<CarwashDTO> dtos = new ArrayList<>();
         for (Carwash e : entities){
             CarwashDTO dto = CarwashMapper.mapToCarwashDTO(e);
@@ -70,15 +80,22 @@ public class CarwashService {
         return dtos;
     }
 
-    public void remove(UUID carwashId){
-        repo.deleteById(carwashId);
+    public void remove(String carwashId) throws
+            NoSuchElementException,
+            IllegalArgumentException{
+        UUID cwUUID = UUID.fromString(carwashId);
+        if (repo.existsById(cwUUID)) {
+            repo.deleteById(cwUUID);
+            return;
+        }
+        throw new NoSuchElementException("Nothing to delete.");
     }
 
     public void addEmployee(EmployeeDTO dto) throws
             AlreadyPresentException,
             IllegalArgumentException,
             NoSuchElementException {
-        Carwash cw = parseAndFindById(dto.carwashId);
+        Carwash cw = findById(dto.carwashId);
 
         User employee = userService.findById(dto.employeeId);
         cw.addEmployee(employee);
@@ -89,17 +106,10 @@ public class CarwashService {
             AbsentFromCollectionException,
             IllegalArgumentException,
             NoSuchElementException {
-        Carwash cw = parseAndFindById(dto.carwashId);
+        Carwash cw = findById(dto.carwashId);
         UUID employeeId = UUID.fromString(dto.employeeId);
         User employee = userService.findById(employeeId.toString());
         cw.removeEmployee(employee);
         repo.save(cw);
-    }
-
-    private Carwash parseAndFindById(String maybeUUID) throws
-            IllegalArgumentException,
-            NoSuchElementException {
-        UUID id = UUID.fromString(maybeUUID);
-        return findById(id);
     }
 }

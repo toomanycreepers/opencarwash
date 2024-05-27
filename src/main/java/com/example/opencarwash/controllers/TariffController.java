@@ -96,7 +96,7 @@ public class TariffController {
 
     @GetMapping("/{id}")
     @ResponseBody
-    public ResponseEntity<TariffDTO> getById(@PathVariable UUID id){
+    public ResponseEntity<TariffDTO> getById(@PathVariable String id){
         try{
             TariffDTO tariff = service.getDTOById(id);
             return new ResponseEntity<>(tariff, HttpStatus.OK);
@@ -107,7 +107,7 @@ public class TariffController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<HttpStatus> remove(@PathVariable UUID id){
+    public ResponseEntity<HttpStatus> remove(@PathVariable String id){
         try{
             service.remove(id);
             return new ResponseEntity<>(HttpStatus.OK);

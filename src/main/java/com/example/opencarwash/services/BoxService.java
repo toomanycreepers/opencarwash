@@ -6,6 +6,7 @@ import com.example.opencarwash.dtos.box.BoxCreationDTO;
 import com.example.opencarwash.dtos.box.BoxDTO;
 import com.example.opencarwash.dtos.box.BoxTariffIdDTO;
 import com.example.opencarwash.dtos.box.NumberDTO;
+import com.example.opencarwash.dtos.tariff.FullTariffDTO;
 import com.example.opencarwash.entities.Box;
 import com.example.opencarwash.entities.BusinessHours;
 import com.example.opencarwash.entities.Carwash;
@@ -33,11 +34,15 @@ public class BoxService {
     @Autowired
     private CarwashService cwService;
 
-    public Box findById(String id) throws NoSuchElementException {
+    public Box findById(String id) throws
+            NoSuchElementException,
+            IllegalArgumentException {
         return repo.findById(UUID.fromString(id)).orElseThrow(() -> new NoSuchElementException("Invalid box id."));
     }
 
-    public void setOpTimeForWorkWeek(BoxWorkWeekTimeDTO dto) throws NoSuchElementException {
+    public void setOpTimeForWorkWeek(BoxWorkWeekTimeDTO dto) throws
+            IllegalArgumentException,
+            NoSuchElementException {
         Box box = findById(dto.boxId);
 
         int workingDays = box.getWorkWeekType().getDaysWorking();
@@ -48,11 +53,15 @@ public class BoxService {
         timeRepo.saveAll(days);
     }
 
-    public void closeBox(String boxId) throws NoSuchElementException {
+    public void closeBox(String boxId) throws
+            IllegalArgumentException,
+            NoSuchElementException {
         changeBoxStatusTo(true, boxId);
     }
 
-    public void openBox(String boxId) throws NoSuchElementException {
+    public void openBox(String boxId) throws
+            IllegalArgumentException,
+            NoSuchElementException {
         changeBoxStatusTo(false, boxId);
     }
 
@@ -61,20 +70,23 @@ public class BoxService {
             NoSuchElementException,
             ArrayIndexOutOfBoundsException {
         WorkWeekType type = WorkWeekType.values()[dto.workWeekType];
-        UUID carwashId = UUID.fromString(dto.carwashId);
-        Carwash carwash = cwService.findById(carwashId);
+        Carwash carwash = cwService.findById(dto.carwashId);
         Box box = new Box(dto.number, type, carwash);
         repo.save(box);
         return box;
     }
 
-    public void setOpTimeForDay(BoxTimeDTO dto) throws NoSuchElementException {
+    public void setOpTimeForDay(BoxTimeDTO dto) throws
+            IllegalArgumentException,
+            NoSuchElementException {
         Box box = findById(dto.boxId);
         BusinessHours opTime = BusinessHoursMapper.mapFromBusinessHoursDTO(dto,box);
         timeRepo.save(opTime);
     }
 
-    public void updateNumber(NumberDTO dto) throws NoSuchElementException {
+    public void updateNumber(NumberDTO dto) throws
+            NoSuchElementException,
+            IllegalArgumentException {
         Box box = findById(dto.boxId);
         box.setNumber(dto.number);
         repo.save(box);
@@ -83,11 +95,9 @@ public class BoxService {
     public void addTariff(BoxTariffIdDTO dto) throws
             NoSuchElementException,
             IllegalArgumentException,
-            AlreadyPresentException{
-        String boxId = dto.boxId;
-        String tId = dto.tariffId;
-        Box box = findById(boxId);
-        Tariff tariff = tariffService.findById(UUID.fromString(tId));
+            AlreadyPresentException {
+        Box box = findById(dto.boxId);
+        Tariff tariff = tariffService.findById(dto.tariffId);
         if(!box.addTariff(tariff)){
             throw new AlreadyPresentException("Tariff is already added.");
         }
@@ -96,11 +106,9 @@ public class BoxService {
     public void removeTariff(BoxTariffIdDTO dto) throws
             NoSuchElementException,
             IllegalArgumentException,
-            AbsentFromCollectionException{
-        String boxId = dto.boxId;
-        String tId = dto.tariffId;
-        Box box = findById(boxId);
-        Tariff tariff = tariffService.findById(UUID.fromString(tId));
+            AbsentFromCollectionException {
+        Box box = findById(dto.boxId);
+        Tariff tariff = tariffService.findById(dto.tariffId);
         if(!box.removeTariff(tariff)){
             throw new AbsentFromCollectionException("No such tariff");
         }
@@ -111,8 +119,10 @@ public class BoxService {
         return BoxMapper.toDTO(box);
     }
 
-    public List<BoxDTO> getByCarwashId(UUID carwashId){
-        List<Box> boxes = repo.findAllByCarwashId(carwashId);
+    public List<BoxDTO> getByCarwashId(String carwashId) throws
+            IllegalArgumentException {
+        UUID carwashUUID = UUID.fromString(carwashId);
+        List<Box> boxes = repo.findAllByCarwashId(carwashUUID);
         List<BoxDTO> boxDTOs = new ArrayList<>();
         for (Box box: boxes){
             boxDTOs.add(BoxMapper.toDTO(box));
@@ -120,8 +130,19 @@ public class BoxService {
         return boxDTOs;
     }
 
-    public void removeById(UUID id){
-        repo.deleteById(id);
+    public List<FullTariffDTO> getTariffsByBox(String boxUUID) throws
+            NoSuchElementException,
+            IllegalArgumentException{
+        Box box = findById(boxUUID);
+        return box.getTariffs()
+                .stream()
+                .map(x -> tariffService.getTariffWithServices(x.getId().toString()))
+                .toList();
+    }
+
+    public void removeById(String id) throws IllegalArgumentException {
+        UUID boxId = UUID.fromString(id);
+        repo.deleteById(boxId);
     }
 
     private void changeBoxStatusTo(boolean isClosed, String boxId){

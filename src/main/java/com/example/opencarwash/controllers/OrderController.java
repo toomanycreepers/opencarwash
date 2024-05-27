@@ -62,7 +62,7 @@ public class OrderController {
     }
 
     @PutMapping("/removeFeedback/{orderId}")
-    public ResponseEntity<HttpStatus> removeFeedback(@PathVariable UUID id){
+    public ResponseEntity<HttpStatus> removeFeedback(@PathVariable String id){
         try{
             service.removeFeedback(id);
             return new ResponseEntity<>(HttpStatus.OK);
@@ -108,7 +108,7 @@ public class OrderController {
 
     @GetMapping("/{id}")
     @ResponseBody
-    public ResponseEntity<OrderDTO> getById(@PathVariable UUID id){
+    public ResponseEntity<OrderDTO> getById(@PathVariable String id){
         try{
             OrderDTO order = service.getDTOById(id);
             return new ResponseEntity<>(order, HttpStatus.OK);
@@ -120,7 +120,7 @@ public class OrderController {
 
     @GetMapping("/box/{boxId}")
     @ResponseBody
-    public ResponseEntity<List<OrderDTO>> getByBoxId(@PathVariable UUID boxId){
+    public ResponseEntity<List<OrderDTO>> getByBoxId(@PathVariable String boxId){
         try{
             List<OrderDTO> orders = service.getByBoxId(boxId);
             return new ResponseEntity<>(orders, HttpStatus.OK);
@@ -143,7 +143,7 @@ public class OrderController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<HttpStatus> remove(@PathVariable UUID id){
+    public ResponseEntity<HttpStatus> remove(@PathVariable String id){
         try{
             service.remove(id);
             return new ResponseEntity<>(HttpStatus.OK);

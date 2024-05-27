@@ -72,9 +72,9 @@ public class CarwashController {
         }
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<CarwashDTO> getById(@PathVariable UUID id){
-        CarwashDTO carwashDTO = service.getDTOById(id);
+    @GetMapping("/{cwId}")
+    public ResponseEntity<CarwashDTO> getById(@PathVariable String cwId){
+        CarwashDTO carwashDTO = service.getDTOById(cwId);
         try {
             return new ResponseEntity<>(carwashDTO, HttpStatus.OK);
         }
@@ -84,7 +84,7 @@ public class CarwashController {
     }
 
     @GetMapping("/franchiseId/{franchiseId}")
-    public ResponseEntity<List<CarwashDTO>> getByFranchiseId(@PathVariable UUID franchiseId){
+    public ResponseEntity<List<CarwashDTO>> getByFranchiseId(@PathVariable String franchiseId){
         try{
             List<CarwashDTO> carwashes = service.getAllByFranchiseId(franchiseId);
             return new ResponseEntity<>(carwashes, HttpStatus.OK);
@@ -95,7 +95,7 @@ public class CarwashController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<HttpStatus> remove(@PathVariable UUID id){
+    public ResponseEntity<HttpStatus> remove(@PathVariable String id){
         try{
             service.remove(id);
             return new ResponseEntity<>(HttpStatus.OK);

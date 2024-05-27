@@ -20,68 +20,78 @@ public class CwServiceService {
     @Autowired
     private CarwashService carwashService;
 
-    public CwService findById(UUID id) throws NoSuchElementException{
-        return repo.findById(id).orElseThrow(
+    public CwService findById(String id) throws
+            NoSuchElementException,
+            IllegalArgumentException {
+        return repo.findById(UUID.fromString(id)).orElseThrow(
                 () -> new NoSuchElementException("Incorrect service Id provided.")
         );
     }
 
     public void addCwService(CwServiceCreationDTO dto) throws
             IllegalArgumentException,
-            NoSuchElementException{
-        Carwash cw = carwashService.findById(UUID.fromString(dto.carwashId));
+            NoSuchElementException {
+        Carwash cw = carwashService.findById(dto.carwashId);
         CwService cwService = CwServiceMapper.mapFromDTO(dto,cw);
         repo.save(cwService);
     }
 
     public void changeDescription(CwServiceDescriptionDTO dto) throws
             IllegalArgumentException,
-            NoSuchElementException{
-        CwService service = parseAndFindById(dto.id);
+            NoSuchElementException {
+        CwService service = findById(dto.id);
         service.setDescription(dto.newDescription);
         repo.save(service);
     }
 
-    public void updateName(NameDTO dto){
-        CwService service = parseAndFindById(dto.cwServiceId);
+    public void updateName(NameDTO dto) throws
+            NoSuchElementException,
+            IllegalArgumentException {
+        CwService service = findById(dto.cwServiceId);
         service.setDescription(dto.name);
         repo.save(service);
     }
 
-    public void updatePrice(PriceDTO dto){
-        CwService service = parseAndFindById(dto.cwServiceId);
+    public void updatePrice(PriceDTO dto) throws
+            NoSuchElementException,
+            IllegalArgumentException {
+        CwService service = findById(dto.cwServiceId);
         service.setPrice(dto.price);
         repo.save(service);
     }
 
-    public void updateDuration(DurationDTO dto){
-        CwService service = parseAndFindById(dto.cwServiceId);
+    public void updateDuration(DurationDTO dto) throws
+            NoSuchElementException,
+            IllegalArgumentException {
+        CwService service = findById(dto.cwServiceId);
         service.setDuration(dto.duration.shortValue());
         repo.save(service);
     }
 
-    public CwServiceDTO getDTOById(UUID id){
+    public CwServiceDTO getDTOById(String id) throws
+            IllegalArgumentException,
+            NoSuchElementException {
         CwService service = findById(id);
         return CwServiceMapper.mapToDTO(service);
     }
 
-    public void remove(UUID id){
-        repo.deleteById(id);
+    public void remove(String id) {
+        UUID cwServiceUUID = UUID.fromString(id);
+        if (repo.existsById(cwServiceUUID)) {
+            repo.deleteById(cwServiceUUID);
+            return;
+        }
+        throw new NoSuchElementException("Nothing to delete.");
     }
 
-    public List<CwServiceDTO> getByCarwashId(UUID id){
-        List<CwService> services = repo.findAllByCarwashId(id);
+    public List<CwServiceDTO> getByCarwashId(String id) throws
+            IllegalArgumentException {
+        UUID cwUUID = UUID.fromString(id);
+        List<CwService> services = repo.findAllByCarwashId(cwUUID);
         List<CwServiceDTO> dtos = new ArrayList<>();
         for (CwService s : services){
             dtos.add(CwServiceMapper.mapToDTO(s));
         }
         return dtos;
-    }
-
-    private CwService parseAndFindById(String maybeUUID) throws
-            IllegalArgumentException,
-            NoSuchElementException {
-        UUID id = UUID.fromString(maybeUUID);
-        return findById(id);
     }
 }

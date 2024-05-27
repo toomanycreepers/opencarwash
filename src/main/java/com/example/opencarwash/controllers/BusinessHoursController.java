@@ -1,6 +1,7 @@
 package com.example.opencarwash.controllers;
 
 import com.example.opencarwash.dtos.businessHours.BusinessHoursDTO;
+import com.example.opencarwash.dtos.businessHours.MassUpdateDTO;
 import com.example.opencarwash.dtos.businessHours.OpenClosingTimeDTO;
 import com.example.opencarwash.services.BusinessHoursService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.format.DateTimeParseException;
+import java.util.Date;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.UUID;
@@ -76,8 +79,19 @@ public class BusinessHoursController {
         }
     }
 
+    @PostMapping("/update/box")
+    public ResponseEntity<HttpStatus> updateWorkingWeekOfBox(@RequestBody MassUpdateDTO dto){
+        try{
+            service.updateAllByBox(dto);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        catch (DateTimeParseException e){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
     @DeleteMapping("/{id}")
-    public ResponseEntity<HttpStatus> remove(@PathVariable UUID id){
+    public ResponseEntity<HttpStatus> remove(@PathVariable String id){
         try{
             service.remove(id);
             return new ResponseEntity<>(HttpStatus.OK);

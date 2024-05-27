@@ -22,17 +22,26 @@ public class FranchiseService {
     @Autowired
     private UserService userService;
 
-    public Franchise findById(UUID franchiseId) throws NoSuchElementException {
-        return repo.findById(franchiseId).orElseThrow(
+    public Franchise findById(String franchiseId) throws
+            NoSuchElementException,
+            IllegalArgumentException {
+        return repo.findById(UUID.fromString(franchiseId)).orElseThrow(
                 () -> new NoSuchElementException("Incorrect franchise Id provided."));
     }
 
-    public void remove(UUID id){
-        repo.deleteById(id);
+    public void remove(String id) throws IllegalArgumentException {
+        UUID franchiseUUID = UUID.fromString(id);
+        if (repo.existsById(franchiseUUID)) {
+            repo.deleteById(franchiseUUID);
+            return;
+        }
+        throw new NoSuchElementException("Nothing to delete.");
     }
 
-    public void create(FranchiseCreationDTO dto){
-        User owner = parseIdAndFindOwner(dto.ownerId);
+    public void create(FranchiseCreationDTO dto) throws
+            NoSuchElementException,
+            IllegalArgumentException {
+        User owner = userService.findById(dto.ownerId);
         Franchise franchise = FranchiseMapper.mapFromDTO(dto,owner);
         repo.save(franchise);
     }
@@ -40,7 +49,7 @@ public class FranchiseService {
     public void updateName(NameDTO dto) throws
             IllegalArgumentException,
             NoSuchElementException {
-        Franchise franchise = parseIdAndFind(dto.franchiseId);
+        Franchise franchise = findById(dto.franchiseId);
         franchise.setName(dto.name);
         repo.save(franchise);
     }
@@ -54,23 +63,9 @@ public class FranchiseService {
     public void updateOwner(OwnerDTO dto) throws
             IllegalArgumentException,
             NoSuchElementException{
-        User owner = parseIdAndFindOwner(dto.ownerId);
-        Franchise franchise = parseIdAndFind(dto.franchiseId);
+        User owner = userService.findById(dto.ownerId);
+        Franchise franchise = findById(dto.franchiseId);
         franchise.setOwner(owner);
         repo.save(franchise);
-    }
-
-    private User parseIdAndFindOwner(String supposedId) throws
-            IllegalArgumentException,
-            NoSuchElementException {
-
-        return userService.findById(supposedId);
-    }
-
-    private Franchise parseIdAndFind(String supposedId) throws
-            IllegalArgumentException,
-            NoSuchElementException {
-        UUID franchiseId = UUID.fromString(supposedId);
-        return findById(franchiseId);
     }
 }
