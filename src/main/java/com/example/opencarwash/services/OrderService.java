@@ -6,6 +6,7 @@ import com.example.opencarwash.entities.Order;
 import com.example.opencarwash.entities.Tariff;
 import com.example.opencarwash.entities.User;
 import com.example.opencarwash.repositories.OrderRepository;
+import com.example.opencarwash.utils.customExceptions.IllegalStatusMutationException;
 import com.example.opencarwash.utils.dtomappers.OrderMapper;
 import com.example.opencarwash.utils.enums.OrderState;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,9 +63,11 @@ public class OrderService {
     public void updateState(StateDTO dto) throws
             IllegalArgumentException,
             NoSuchElementException,
-            IndexOutOfBoundsException {
+            IndexOutOfBoundsException,
+            IllegalStatusMutationException{
         Order order = findById(dto.orderId);
-        order.setState(OrderState.values()[dto.state]);
+
+        checkSetState(order, dto.state);
         repo.save(order);
     }
 
@@ -109,5 +112,29 @@ public class OrderService {
         UUID boxId = UUID.fromString(dto.boxId);
         List<Order> orders = repo.findByBoxAndDate(boxId, date);
         return OrderMapper.mapToDTOList(orders);
+    }
+
+    private void checkSetState(Order order, int stateOrdinal) throws
+            IllegalStatusMutationException,
+            IndexOutOfBoundsException{
+        OrderState currentOrderState = order.getState();
+
+        if(currentOrderState == OrderState.PLACED){
+            if(stateOrdinal == OrderState.PLACED.ordinal()){
+                throw new IllegalStatusMutationException();
+            }
+            order.setState(OrderState.values()[stateOrdinal]);
+        }
+
+        else if(currentOrderState == OrderState.ACCEPTED){
+            if(stateOrdinal == OrderState.ACCEPTED.ordinal() || stateOrdinal == OrderState.PLACED.ordinal()){
+                throw new IllegalStatusMutationException();
+            }
+            order.setState(OrderState.values()[stateOrdinal]);
+        }
+
+        else{
+            throw new IllegalStatusMutationException();
+        }
     }
 }
