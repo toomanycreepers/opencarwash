@@ -16,7 +16,7 @@ import java.util.Set;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/bHrs")
+@RequestMapping("/api/bHrs")
 public class BusinessHoursController {
 
     @Autowired
@@ -67,7 +67,7 @@ public class BusinessHoursController {
         }
     }
 
-    @GetMapping("/box/{id}")
+    @GetMapping("/box/{boxId}")
     @ResponseBody
     public ResponseEntity<Set<BusinessHoursDTO>> getByBoxId(@PathVariable String boxId){
         try{

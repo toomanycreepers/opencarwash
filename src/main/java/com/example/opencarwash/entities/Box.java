@@ -22,7 +22,7 @@ public class Box {
 
     @NonNull
     @Setter
-    @Column(name = "number", unique = true)
+    @Column(name = "number")
     @Check(name = "box_num_min_one", constraints = "number >= 1")
     private Integer number;
 

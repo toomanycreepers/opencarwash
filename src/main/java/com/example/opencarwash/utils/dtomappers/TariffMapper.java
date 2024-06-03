@@ -6,7 +6,6 @@ import com.example.opencarwash.dtos.tariff.TariffDTO;
 import com.example.opencarwash.entities.Tariff;
 import com.example.opencarwash.entities.TariffOptionals;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public final class TariffMapper {
@@ -18,7 +17,7 @@ public final class TariffMapper {
                 tariff.getId().toString(),
                 tariff.getName(),
                 tariff.getDescription(),
-                (ArrayList<String>) services,
+                services,
                 tariff.getCommentForEmployees(),
                 tariff.getBufferTime()
         );
@@ -32,7 +31,7 @@ public final class TariffMapper {
                 tariff.getId().toString(),
                 tariff.getName(),
                 tariff.getDescription(),
-                (ArrayList<CwServiceOptDTO>) services,
+                services,
                 tariff.getCommentForEmployees(),
                 tariff.getBufferTime()
         );

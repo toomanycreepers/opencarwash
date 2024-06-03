@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/carwash")
+@RequestMapping("/api/carwash")
 public class CarwashController {
 
     @Autowired

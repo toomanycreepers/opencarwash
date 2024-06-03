@@ -8,7 +8,7 @@ import com.example.opencarwash.entities.CwService;
 public final class CwServiceMapper {
     private CwServiceMapper(){}
 
-    public static CwService mapFromDTO(CwServiceCreationDTO dto, Carwash carwash){
+    public static CwService mapFromCreationDTO(CwServiceCreationDTO dto, Carwash carwash){
         return new CwService(dto.name, dto.price, dto.description, dto.duration, carwash);
     }
 

@@ -1,5 +1,7 @@
 package com.example.opencarwash.controllers;
 
+import com.example.opencarwash.dtos.order.DateBoxDTO;
+import com.example.opencarwash.dtos.order.OrderWithServicesDTO;
 import com.example.opencarwash.dtos.tariff.*;
 import com.example.opencarwash.services.TariffService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,20 +10,35 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/tariff")
+@RequestMapping("/api/tariff")
 public class TariffController {
 
     @Autowired
     private TariffService service;
 
     @PostMapping
-    public ResponseEntity<HttpStatus> create(@RequestBody TariffCreationDTO dto){
+    public ResponseEntity<String> create(@RequestBody TariffCreationDTO dto){
         try{
-            service.addTariff(dto);
-            return new ResponseEntity<>(HttpStatus.CREATED);
+            String id = service.addTariff(dto);
+            return new ResponseEntity<>(id, HttpStatus.CREATED);
+        }
+        catch(Exception e){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping
+    public ResponseEntity<HttpStatus> update(@RequestBody TariffDTO dto){
+        try{
+            service.update(dto);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        catch(NoSuchElementException e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         catch(Exception e){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -105,6 +122,20 @@ public class TariffController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
+
+    @GetMapping("/full/{id}")
+    @ResponseBody
+    public ResponseEntity<FullTariffDTO> getFullById(@PathVariable String id){
+        try{
+            FullTariffDTO tariff = service.getFullDTOById(id);
+            return new ResponseEntity<>(tariff, HttpStatus.OK);
+        }
+        catch(Exception e){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<HttpStatus> remove(@PathVariable String id){

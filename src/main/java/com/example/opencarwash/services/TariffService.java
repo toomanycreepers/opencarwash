@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class TariffService {
@@ -28,17 +29,19 @@ public class TariffService {
         );
     }
 
-    public void addTariff(TariffCreationDTO dto) throws
+    public String addTariff(TariffCreationDTO dto) throws
             NoSuchElementException,
             IllegalArgumentException{
         Tariff tariff = new Tariff(dto.name, dto.description);
-        repo.save(tariff);
+        UUID id = repo.save(tariff).getId();
+
         Set<TariffOptionals> servicesToAdd = new HashSet<>(dto.serviceIds.size());
         for (Tuple2<String,Boolean> tuple: dto.serviceIds){
             CwService service = cwSService.findById(tuple.elem1);
             servicesToAdd.add(new TariffOptionals(tuple.elem2,tariff,service));
         }
         optionalsRepo.saveAll(servicesToAdd);
+        return id.toString();
     }
 
     public void remove(String id) throws IllegalArgumentException {
@@ -48,6 +51,26 @@ public class TariffService {
             return;
         }
         throw new NoSuchElementException("Nothing to delete.");
+    }
+
+    public void update(TariffDTO dto) throws
+            NoSuchElementException,
+            IllegalArgumentException{
+        Tariff tariff = findById(dto.id);
+
+        tariff.setName(dto.name);
+        tariff.setDescription(dto.description);
+        tariff.setBufferTime(dto.BufferTime);
+        tariff.setCommentForEmployees(dto.commentForEmployees);
+        repo.save(tariff);
+
+        Set<TariffOptionals> tarOpt = new HashSet<TariffOptionals>();
+        List<CwService> cwServices = dto.serviceIds.stream().map(cwSService::findById).toList();
+        optionalsRepo.deleteAll(optionalsRepo.findAllByTariffId(tariff.getId()));
+        for(CwService cwService : cwServices){
+            tarOpt.add(new TariffOptionals(false, tariff, cwService));
+        }
+        optionalsRepo.saveAll(tarOpt);
     }
 
     public void updateDescription(DescriptionDTO dto) throws
@@ -107,5 +130,10 @@ public class TariffService {
     public TariffDTO getDTOById(String uuid){
         Tariff tariff = findById(uuid);
         return TariffMapper.mapToDTO(tariff);
+    }
+
+    public FullTariffDTO getFullDTOById(String uuid){
+        Tariff tariff = findById(uuid);
+        return TariffMapper.mapToFullDTO(tariff);
     }
 }

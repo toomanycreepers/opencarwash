@@ -6,6 +6,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 public class UserDetailsImpl implements UserDetails {
@@ -51,6 +52,11 @@ public class UserDetailsImpl implements UserDetails {
     public UserDetailsImpl(User user){
         phoneNumber = user.getPhoneNumber();
         password = user.getPassword();
-        roles = user.getUserRoles();
+//        roles = user.getUserRoles();
+
+        Set<Role> roles1  = new HashSet<Role>();
+        Role role1 = new Role("ROLE_EMPLOYEE");
+        roles1.add(role1);
+        roles = roles1;
     }
 }

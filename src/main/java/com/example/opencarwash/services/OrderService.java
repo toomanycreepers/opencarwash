@@ -1,6 +1,7 @@
 package com.example.opencarwash.services;
 
 import com.example.opencarwash.dtos.order.*;
+import com.example.opencarwash.dtos.tariff.FullTariffDTO;
 import com.example.opencarwash.entities.Box;
 import com.example.opencarwash.entities.Order;
 import com.example.opencarwash.entities.Tariff;
@@ -8,6 +9,7 @@ import com.example.opencarwash.entities.User;
 import com.example.opencarwash.repositories.OrderRepository;
 import com.example.opencarwash.utils.customExceptions.IllegalStatusMutationException;
 import com.example.opencarwash.utils.dtomappers.OrderMapper;
+import com.example.opencarwash.utils.dtomappers.TariffMapper;
 import com.example.opencarwash.utils.enums.OrderState;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.UUID;
+import java.util.function.Predicate;
 
 @Service
 public class OrderService {
@@ -91,26 +94,53 @@ public class OrderService {
         repo.save(order);
     }
 
-    public OrderDTO getDTOById(String id) throws
+    public OrderWithServicesDTO getDTOById(String id) throws
             IllegalArgumentException,
             NoSuchElementException{
         Order order = findById(id);
         return OrderMapper.mapToDTO(order);
     }
 
-    public List<OrderDTO> getByBoxId(String boxId) throws
+    public List<OrderWithServicesDTO> getByBoxId(String boxId) throws
             IllegalArgumentException {
         UUID id = UUID.fromString(boxId);
         List<Order> orders = repo.findAllByBoxId(id);
         return OrderMapper.mapToDTOList(orders);
     }
 
-    public List<OrderDTO> getByDateBox(DateBoxDTO dto) throws
+    public List<OrderWithServicesDTO> getBoxHistory(String boxId) throws
+            IllegalArgumentException {
+        UUID id = UUID.fromString(boxId);
+
+        Predicate<Order> orderPredicate = order -> !(order.getState().equals(OrderState.PLACED)
+                || order.getState().equals(OrderState.ACCEPTED));
+
+        List<Order> orders = repo.findAllByBoxId(id).stream().filter(orderPredicate).toList();
+
+        List<OrderWithServicesDTO> fullDTOS = new ArrayList<OrderWithServicesDTO>();
+        for(Order order : orders){
+            fullDTOS.add(new OrderWithServicesDTO(
+                    order.getId().toString(),
+                    order.getClient().getId().toString(),
+                    order.getBox().getId().toString(),
+                    TariffMapper.mapToFullDTO(order.getTariff()),
+                    order.getStartTime().toString(),
+                    order.getState().ordinal(),
+                    order.getFeedback(),
+                    order.getRating() == null? null : order.getRating().intValue()
+            ));
+        }
+
+        return fullDTOS;
+    }
+
+    public List<OrderWithServicesDTO> getByDateBox(DateBoxDTO dto) throws
             IllegalArgumentException,
             DateTimeParseException{
         LocalDate date = LocalDate.parse(dto.date);
         UUID boxId = UUID.fromString(dto.boxId);
         List<Order> orders = repo.findByBoxAndDate(boxId, date);
+        orders.removeIf(order -> !(order.getState().ordinal() == 0 || order.getState().ordinal() == 2));
         return OrderMapper.mapToDTOList(orders);
     }
 

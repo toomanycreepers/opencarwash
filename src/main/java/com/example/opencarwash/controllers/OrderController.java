@@ -2,16 +2,18 @@ package com.example.opencarwash.controllers;
 
 import com.example.opencarwash.dtos.order.*;
 import com.example.opencarwash.services.OrderService;
+import com.example.opencarwash.utils.customExceptions.IllegalStatusMutationException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
+import java.util.NoSuchElementException;
 
 @RestController
-@RequestMapping("/order")
+@RequestMapping("/api/order")
 public class OrderController {
 
     @Autowired
@@ -34,8 +36,11 @@ public class OrderController {
             service.updateState(dto);
             return new ResponseEntity<>(HttpStatus.OK);
         }
-        catch(Exception e){
+        catch(IllegalArgumentException | IllegalStatusMutationException | IndexOutOfBoundsException e){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        catch(NoSuchElementException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
@@ -108,9 +113,9 @@ public class OrderController {
 
     @GetMapping("/{id}")
     @ResponseBody
-    public ResponseEntity<OrderDTO> getById(@PathVariable String id){
+    public ResponseEntity<OrderWithServicesDTO> getById(@PathVariable String id){
         try{
-            OrderDTO order = service.getDTOById(id);
+            OrderWithServicesDTO order = service.getDTOById(id);
             return new ResponseEntity<>(order, HttpStatus.OK);
         }
         catch(Exception e){
@@ -120,9 +125,9 @@ public class OrderController {
 
     @GetMapping("/box/{boxId}")
     @ResponseBody
-    public ResponseEntity<List<OrderDTO>> getByBoxId(@PathVariable String boxId){
+    public ResponseEntity<List<OrderWithServicesDTO>> getByBoxId(@PathVariable String boxId){
         try{
-            List<OrderDTO> orders = service.getByBoxId(boxId);
+            List<OrderWithServicesDTO> orders = service.getByBoxId(boxId);
             return new ResponseEntity<>(orders, HttpStatus.OK);
         }
         catch(Exception e){
@@ -130,11 +135,24 @@ public class OrderController {
         }
     }
 
+    @GetMapping("/history/{boxId}")
+    @ResponseBody
+    public ResponseEntity<List<OrderWithServicesDTO>> getBoxHistory(@PathVariable String boxId){
+        try{
+            List<OrderWithServicesDTO> orders = service.getBoxHistory(boxId);
+            return new ResponseEntity<>(orders, HttpStatus.OK);
+        }
+        catch(IllegalArgumentException e){
+            System.out.println(e);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
     @PostMapping("/dateBox")
     @ResponseBody
-    public ResponseEntity<List<OrderDTO>> getByBoxDate(@RequestBody DateBoxDTO dto){
+    public ResponseEntity<List<OrderWithServicesDTO>> getByBoxDate(@RequestBody DateBoxDTO dto){
         try{
-            List<OrderDTO> orders = service.getByDateBox(dto);
+            List<OrderWithServicesDTO> orders = service.getByDateBox(dto);
             return new ResponseEntity<>(orders, HttpStatus.OK);
         }
         catch(Exception e){

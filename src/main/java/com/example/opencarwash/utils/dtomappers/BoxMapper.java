@@ -1,6 +1,7 @@
 package com.example.opencarwash.utils.dtomappers;
 
 import com.example.opencarwash.dtos.box.BoxDTO;
+import com.example.opencarwash.dtos.carwashBox.BoxDescriptionDTO;
 import com.example.opencarwash.entities.Box;
 import com.example.opencarwash.entities.Tariff;
 
@@ -26,5 +27,11 @@ public final class BoxMapper {
             ids.add(tariff.getId().toString());
         }
         return ids;
+    }
+
+    public static BoxDescriptionDTO mapDTOtoDescriptionDTO(BoxDTO dto, boolean status){
+        return new BoxDescriptionDTO(
+                dto.id, dto.number, status
+        );
     }
 }

@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class CarwashService {
@@ -40,6 +41,7 @@ public class CarwashService {
             NoSuchElementException{
         Franchise franchise = franchiseService.findById(dto.franchiseId);
         Carwash carwash = CarwashMapper.mapFromCarwashDTO(dto,franchise);
+        carwash.setTimeslotLengthMinutes((short)1);
         repo.save(carwash);
     }
 
@@ -111,5 +113,21 @@ public class CarwashService {
         User employee = userService.findById(employeeId.toString());
         cw.removeEmployee(employee);
         repo.save(cw);
+    }
+
+
+    private Carwash parseAndFindById(String maybeUUID) throws
+            IllegalArgumentException,
+            NoSuchElementException {
+        return findById(maybeUUID);
+    }
+
+    public List<CarwashDTO> getByEmployeeId(UUID employeeId) throws NoSuchElementException{
+        List<Carwash> cws = repo.findByEmployeeId(employeeId);
+        if(cws.isEmpty()){
+            throw new NoSuchElementException("No carwash has such an employee");
+        }
+
+        return cws.stream().map(CarwashMapper::mapToCarwashDTO).collect(Collectors.toList());
     }
 }

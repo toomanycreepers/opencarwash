@@ -1,6 +1,7 @@
 package com.example.opencarwash.controllers;
 
 import com.example.opencarwash.dtos.carwashService.CwServiceDescriptionDTO;
+import com.example.opencarwash.entities.CwService;
 import com.example.opencarwash.dtos.carwashService.CwServiceCreationDTO;
 import com.example.opencarwash.dtos.carwashService.*;
 import com.example.opencarwash.services.CwServiceService;
@@ -10,22 +11,36 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/carwashService")
+@RequestMapping("/api/carwashService")
 public class CarwashServiceController {
 
     @Autowired
     private CwServiceService service;
 
     @PostMapping
-    public ResponseEntity<HttpStatus> create(@RequestBody CwServiceCreationDTO dto){
+    public ResponseEntity<CwService> create(@RequestBody CwServiceCreationDTO dto){
         try{
-            service.addCwService(dto);
-            return new ResponseEntity<>(HttpStatus.CREATED);
+            return new ResponseEntity<>(service.addCwService(dto), HttpStatus.CREATED);
         }
         catch(Exception e){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping
+    public ResponseEntity<HttpStatus> update(@RequestBody CwServiceDTO dto){
+        try{
+            service.update(dto);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        catch(NoSuchElementException e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        catch(IllegalArgumentException e){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }

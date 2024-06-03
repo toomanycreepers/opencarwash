@@ -28,14 +28,24 @@ public class CwServiceService {
         );
     }
 
-    public void addCwService(CwServiceCreationDTO dto) throws
+    public CwService addCwService(CwServiceCreationDTO dto) throws
             IllegalArgumentException,
             NoSuchElementException {
         Carwash cw = carwashService.findById(dto.carwashId);
-        CwService cwService = CwServiceMapper.mapFromDTO(dto,cw);
-        repo.save(cwService);
+        CwService cwService = CwServiceMapper.mapFromCreationDTO(dto,cw);
+        return repo.save(cwService);
     }
 
+    public void update(CwServiceDTO dto) throws
+            IllegalArgumentException,
+            NoSuchElementException{
+        CwService service = findById(dto.id);
+        service.setName(dto.name);
+        service.setDescription(dto.description);
+        service.setPrice(dto.price);
+        service.setDuration(dto.duration.shortValue());
+        repo.save(service);
+    }
     public void changeDescription(CwServiceDescriptionDTO dto) throws
             IllegalArgumentException,
             NoSuchElementException {

@@ -7,6 +7,7 @@ import com.example.opencarwash.dtos.box.BoxDTO;
 import com.example.opencarwash.dtos.box.BoxTariffIdDTO;
 import com.example.opencarwash.dtos.box.NumberDTO;
 import com.example.opencarwash.dtos.tariff.FullTariffDTO;
+import com.example.opencarwash.dtos.tariff.TariffCreationDTO;
 import com.example.opencarwash.entities.Box;
 import com.example.opencarwash.entities.BusinessHours;
 import com.example.opencarwash.entities.Carwash;
@@ -101,6 +102,7 @@ public class BoxService {
         if(!box.addTariff(tariff)){
             throw new AlreadyPresentException("Tariff is already added.");
         }
+        repo.save(box);
     }
 
     public void removeTariff(BoxTariffIdDTO dto) throws
@@ -112,6 +114,7 @@ public class BoxService {
         if(!box.removeTariff(tariff)){
             throw new AbsentFromCollectionException("No such tariff");
         }
+        repo.save(box);
     }
 
     public BoxDTO getDTO(String boxId) throws NoSuchElementException{

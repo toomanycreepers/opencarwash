@@ -31,6 +31,7 @@ public class Tariff {
     @Setter
     private Short bufferTime;
 
+    @Setter
     @OneToMany(mappedBy = "tariff")
     private Set<TariffOptionals> services = new HashSet<>();
 }

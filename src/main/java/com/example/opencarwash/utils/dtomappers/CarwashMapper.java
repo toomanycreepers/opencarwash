@@ -29,6 +29,7 @@ public final class CarwashMapper {
                 cw.getCity(),
                 cw.getStreet(),
                 cw.getBuilding(),
+                Integer.valueOf(cw.getTimeslotLengthMinutes()),
                 employeeIds);
     }
 }

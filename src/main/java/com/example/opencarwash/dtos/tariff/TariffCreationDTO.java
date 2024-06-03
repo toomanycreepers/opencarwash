@@ -8,5 +8,6 @@ import java.util.HashMap;
 public class TariffCreationDTO {
     public String name;
     public String description;
+    public String BoxId;
     public ArrayList<Tuple2<String,Boolean>> serviceIds;
 }
