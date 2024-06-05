@@ -1,0 +1,9 @@
+.select {
+    min-width: 170px;
+    width: auto;
+    height: 60px;
+    border-radius: 8px;
+    background-color: #F3FAFB;
+    border: none;
+    padding: 12px;
+}

@@ -1,0 +1,118 @@
+.serviceWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    height: 54px;
+}
+
+.editWrapper {
+    width: 118px;
+    display: flex;
+    align-items: center;
+    justify-content: right;
+}
+
+.editBtn {
+    width: 54px;
+    height: 54px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.inp {
+    border: none;
+    font-size: 20px;
+    font-weight: 500;
+}
+
+.inp:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+.inp:disabled {
+    color: black;
+}
+
+.name {
+    font-size: 24px;
+    font-weight: 600;
+}
+
+
+.durationWrapper {
+    display: flex;
+    align-items: center;
+    width: 120px;
+}
+
+.duration {
+    max-width: 40px;
+}
+
+.price {
+    max-width: 80px;
+}
+
+
+.priceWrapper {
+    display: flex;
+    align-items: center;
+}
+
+.subSpan {
+    font-size: 20px;
+}
+
+
+.controlBtns {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.cancel, .submit {
+    width: 54px;
+    height: 54px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+input[type="number"].duration::-webkit-inner-spin-button, 
+input[type="number"].duration::-webkit-outer-spin-button,
+input[type="number"].price::-webkit-inner-spin-button, 
+input[type="number"].price::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="number"].duration,
+input[type="number"].price {
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+
+
+.description {
+    min-width: 100%;
+    max-width: 900px;
+    width: 100%;
+    min-height: 20px;
+    height: auto;
+    font-size: 20px;
+    font-weight: 500;
+    border: none;
+}
+
+.description:disabled {
+    color: black;
+}

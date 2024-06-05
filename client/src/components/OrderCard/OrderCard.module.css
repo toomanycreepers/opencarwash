@@ -1,0 +1,117 @@
+.orderCard {
+    background-color: #F3FAFB;
+    width: 100%;
+    height: auto;
+    margin-top: 12px;
+    border-radius: 8px;
+    -moz-user-select: -moz-none;
+    -o-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+    transition: all 1s ease;
+}
+
+.orderCardActive {
+    border-radius: 8px 8px 0 0;
+    background-color: #F3FAFB;
+}
+
+.cardHeader {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding: 12px 24px;
+    height: 100%;
+    cursor: pointer;
+    height: 80px;
+}
+
+.orderNumber {
+    font-weight: 600;
+    font-size: 24px;
+}
+
+.timeInterval {
+    text-align: right;
+    font-weight: 500;
+    font-size: 20px;
+}
+
+.orderAbout {
+    font-weight: 500;
+    font-size: 16px;
+}
+
+.cancelOrderBtn {
+    background: none;
+    border: none;
+    color: red;
+    font-weight: 500;
+    font-size: 16px;
+    width: fit-content;
+    cursor: pointer;
+    margin: 0 0 0 auto;
+    opacity: .8;
+}
+
+.orderBody {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height .3s ease-in-out;
+    background-color: #f3fafb;
+    border-radius: 0 0 8px 8px;
+}
+
+.orderBodyWrapper {
+    padding: 12px 24px;
+}
+
+.services {
+    font-weight: 600;
+    font-size: 24px;
+    margin: 15px 0 10px 0;
+}
+
+.servicesWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+@keyframes slideAndFade {
+    0% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    20% {
+        opacity: .5;
+    }
+    100% {
+        transform: translateX(400px);
+        opacity: 0;
+    }
+}
+
+.closedCard {
+    animation: slideAndFade 1s forwards;
+}
+
+.serviceWrapper {
+    font-size: 20px;
+    font-weight: 500;
+    margin-top: 8px;
+    background-color: white;
+    width: 34%;
+    max-width: 550px;
+    border-radius: 12px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    justify-content: space-between;
+}
+
+.tariff {
+    font-size: 24px;
+    font-weight: 600;
+}

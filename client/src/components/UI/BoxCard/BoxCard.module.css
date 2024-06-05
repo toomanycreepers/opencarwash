@@ -1,0 +1,41 @@
+.circle {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.carwashCard {
+    width: 150px;
+    height: 150px;
+    border-radius: 12px;
+    padding: 10px;
+    background-color: #F3FAFB;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    cursor: pointer;
+}
+
+.carwashName {
+    font-size: 20px;
+    font-weight: 500;
+}
+
+.carwashInfoWrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0 0 5px 5px;
+}
+
+.settingsWrapper {
+    width: 35px;
+    height: 35px;
+    cursor: pointer;
+}
+
+.workload {
+    display: flex;
+    gap: 10px;
+}
+

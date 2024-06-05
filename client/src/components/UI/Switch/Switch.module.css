@@ -1,0 +1,29 @@
+.switch {
+    width: 60px;
+    height: 25px;
+    background-color: rgba(243, 250, 251, 1);
+    border-radius: 25px;
+    position: relative;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+  
+.switchToggled {
+    background-color: #4757C2;
+}
+  
+.switchHandle {
+    width: 15px;
+    height: 15px;
+    background-color: white;
+    border-radius: 50%;
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    transition: left 0.3s ease;
+}
+  
+.switchToggled .switchHandle {
+    left: 40px;
+}
+  

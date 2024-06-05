@@ -1,0 +1,19 @@
+.textarea {
+    border: none;
+    overflow: hidden;
+    resize: none;
+    font-size: 20px;
+    font-weight: 500;
+    padding: 12px;
+    border-radius: 12px;
+    background-color: #f3fafb;
+    min-width: 500px;
+}
+
+.textarea:focus {
+    outline: none;
+}
+
+.textarea:disabled {
+    color: black;
+}

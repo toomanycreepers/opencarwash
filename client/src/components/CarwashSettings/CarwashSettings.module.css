@@ -1,0 +1,43 @@
+.settingsSection {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 95%;
+    min-width: 1200px;
+    max-width: 1600px;
+    margin: 100px auto;
+}
+
+.carwashWrapper {
+    margin-bottom: 48px;
+}
+
+.nameBlock {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    justify-content: space-between;
+}
+
+.wrapper {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+.carwashName {
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.carwashAE {
+    font-size: 20px;
+    font-weight: 500;
+}
+
+.cardWrapper {
+    margin-top: 32px;
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+}

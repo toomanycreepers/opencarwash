@@ -1,0 +1,47 @@
+.bg {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, .5);
+}
+
+.modalBody {
+    background-color: white;
+    width: 95%;
+    min-width: 1200px;
+    max-width: 1600px;
+    min-height: 900px;
+    max-height: 1300px;
+    height: 95%;
+    border-radius: 4px;
+    padding: 24px 32px;
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;
+    position: relative;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.name {
+    font-size: 32px;
+    font-weight: 600;
+}
+
+.closer {
+    width: 54px;
+    height: 54px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

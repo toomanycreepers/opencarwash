@@ -1,0 +1,37 @@
+.sideBarBody {
+    box-shadow: 0px 0px 12px 0px #00000040;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    right: -600px;
+    width: 30vw;
+    min-width: 500px;
+    max-width: 600px;
+    transition: all .4s ease;
+    background-color: white;
+}
+
+.active {
+    transform: translateX(-600px);
+}
+
+.sideBarHeader {
+    display: flex;
+    gap: 20px;
+    justify-content: space-between;
+    width: 92%;
+    margin: 20px auto 0 auto;
+    align-items: center;
+}
+
+.name {
+    font-size: 24px;
+    font-weight: 600;
+    text-overflow: ellipsis;
+    max-width: 175px;
+}
+
+.statusWrapper {
+    width: 92%;
+    margin: 20px auto 0 auto;
+}

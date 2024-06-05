@@ -1,0 +1,12 @@
+.daysWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    margin-top: 24px;
+    height: 100%;
+}
+
+.btnsWrapper {
+    display: flex;
+    justify-content: space-between;
+}

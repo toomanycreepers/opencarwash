@@ -1,0 +1,77 @@
+.dayCard {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    transition: all 1s ease;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    height: 51px;
+    align-items: center;
+}
+
+.wrapper {
+    display: flex;
+    gap: 20px;
+}
+
+.day {
+    font-size: 20px;
+    font-weight: 500;
+}
+
+.opener {
+    height: 35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    font-size: 20px;
+    font-weight: 500;
+}
+
+.periodBlock {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    align-items: center;
+    padding: 2px;
+}
+
+.body {
+    padding-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow: hidden;
+    transition: max-height .3s ease;
+}
+
+.deleteBtn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    width: 35px;
+    height: 35px;
+}
+
+.p {
+    font-size: 20px;
+    font-weight: 500;
+}
+
+@keyframes slideAndFade {
+    0% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    20% {
+        opacity: .5;
+    }
+    100% {
+        transform: translateX(400px);
+        opacity: 0;
+    }
+}

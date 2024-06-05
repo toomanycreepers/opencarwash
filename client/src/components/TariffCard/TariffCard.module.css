@@ -1,0 +1,103 @@
+.tariffCard {
+    display: flex;
+    flex-direction: column;
+}
+
+.header {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    background-color: #F3FAFB;
+    border-radius: 12px;
+    padding: 8px 12px 8px 12px;
+}
+
+.name {
+    font-size: 24px;
+    font-weight: 600;
+    background-color: transparent;
+}
+
+.bufferTime {
+    font-size: 20px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.bufferTimeInput {
+    width: 50px;
+}
+
+.input {
+    font-size: 20px;
+    font-weight: 500;
+}
+
+.input:focus {
+    outline: none;
+}
+
+.openerWrapper {
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: right;
+}
+
+.opener {
+    height: 35px;
+    width: 35px;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+.descriptionWrapper, .commentWrapper {
+    font-size: 20px;
+    font-weight: 500;
+    margin-top: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.serviceList {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 12px;
+}
+
+.main {
+    overflow: hidden;
+    transition: max-height .3s ease;
+    padding: 0 12px;
+}
+
+.submit {
+    border: none;
+    background-color: #F3FAFB;
+    cursor: pointer;
+    width: 35px;
+    height: 35px;
+    border-radius: 12px;
+}
+
+.input {
+    border: none;
+}
+
+.input:disabled {
+    color: black;
+}
+
+.editWrapper {
+    margin: 12px 0;
+    float: right;
+}
+
+.cancelWrapper {
+    display: flex;
+    gap: 12px;
+}

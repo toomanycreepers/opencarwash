@@ -1,0 +1,15 @@
+.errorContainer {
+    position: absolute;
+    background-color: #f44336;
+    color: white;
+    padding: 16px;
+    margin: 16px;
+    transition: transform 0.3s ease-out;
+    width: 350px;
+    text-align: center;
+    transform: translateX(400px);
+}
+
+.errorContainer.hide {
+    transform: translateX(0);
+}
