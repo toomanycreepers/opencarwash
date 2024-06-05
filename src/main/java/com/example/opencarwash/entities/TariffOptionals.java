@@ -10,7 +10,7 @@ import java.util.UUID;
 @Entity
 @Getter
 @Table(name = "tariffs_services")
-public class TariffService {
+public class TariffOptionals {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
@@ -26,5 +26,5 @@ public class TariffService {
     @NonNull
     @ManyToOne
     @JoinColumn(name = "service_id")
-    private CarwashService service;
+    private CwService service;
 }

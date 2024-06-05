@@ -18,16 +18,20 @@ public class Tariff {
     private UUID id;
 
     @NonNull
+    @Setter
     private String name;
 
     @NonNull
+    @Setter
     private String description;
 
-    @NonNull
+    @Setter
     private String commentForEmployees;
 
-    @NonNull
+    @Setter
     private Short bufferTime;
+
+    @Setter
     @OneToMany(mappedBy = "tariff")
-    private Set<TariffService> services = new HashSet<>();
+    private Set<TariffOptionals> services = new HashSet<>();
 }

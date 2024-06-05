@@ -1,6 +1,6 @@
 package com.example.opencarwash.entities;
 
-import com.example.opencarwash.utils.OrderState;
+import com.example.opencarwash.utils.enums.OrderState;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -22,15 +22,15 @@ public class Order {
     @NonNull
     private LocalDateTime startTime;
 
-
-    @NonNull
+    @Setter
     private Short rating;
 
-    @NonNull
+    @Setter
     private String feedback;
 
     @NonNull
     @Enumerated(value = EnumType.ORDINAL)
+    @Setter
     private OrderState state;
 
     @NonNull
@@ -41,6 +41,7 @@ public class Order {
     @NonNull
     @ManyToOne
     @JoinColumn(name = "box_id")
+    @Setter
     private Box box;
 
     @NonNull

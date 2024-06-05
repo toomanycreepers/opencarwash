@@ -1,10 +1,8 @@
 package com.example.opencarwash.entities;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -21,20 +19,25 @@ public class User {
     private UUID id;
 
     @NonNull
+    @Setter
     private String phoneNumber;
 
     @NonNull
+    @Setter
     private String firstName;
 
     @NonNull
+    @Setter
     private String lastName;
 
     @NonNull
     private String password;
 
-    @NonNull
+    private String salt;
+
     @Lob
-    private Byte[] picture;
+    @Setter
+    private byte[] picture;
 
     @ManyToMany
     @JoinTable(
@@ -43,4 +46,15 @@ public class User {
         inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private Set<Role> userRoles = new HashSet<>();
+
+    public void setPassword(String password) {
+        generateSalt();
+        password = BCrypt.hashpw(password, salt);
+        this.password = password;
+    }
+
+    private void generateSalt(){
+        if (this.salt==null)
+            this.salt= BCrypt.gensalt();
+    }
 }

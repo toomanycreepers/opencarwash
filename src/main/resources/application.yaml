@@ -9,7 +9,7 @@ server:
 spring:
   config:
     activate:
-      on-profile: dev
+      on-profile: test
   h2:
     console:
       enabled: true
@@ -27,6 +27,31 @@ spring:
         format_sql: true
         use_sql_comments: true
         show_sql: true
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/opencarwash
+    driverClassName: org.postgresql.Driver
+    username:
+    password:
+
+  jpa:
+    show-sql: true
+    hibernate:
+      dialect: org.hibernate.dialect.PostgreSQLDialect
+      ddl-auto: update
+
+  security:
+    jwt:
+      expirationAccessMs: 3600000
+      expirationRefreshMs: 2952000000
+      secret: secret
 
 ---
 
