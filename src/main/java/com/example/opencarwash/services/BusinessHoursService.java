@@ -54,7 +54,7 @@ public class BusinessHoursService {
 
     public void changeCarwashClosedStatus(String boxId, boolean isClosed) throws
             IllegalArgumentException {
-        var workdays = repo.findAllByBoxId(UUID.fromString(boxId));
+        Set<BusinessHours> workdays = repo.findAllByBoxId(UUID.fromString(boxId));
         for (BusinessHours bh : workdays){
             bh.setIsClosed(isClosed);
         }

@@ -1,6 +1,11 @@
 spring:
   application:
     name: opencarwash
+  security:
+    jwt:
+      expirationAccessMs: 3600000
+      expirationRefreshMs: 2952000000
+      secret: secret
 server:
   port: 8080
 
@@ -47,15 +52,9 @@ spring:
       dialect: org.hibernate.dialect.PostgreSQLDialect
       ddl-auto: update
 
-  security:
-    jwt:
-      expirationAccessMs: 3600000
-      expirationRefreshMs: 2952000000
-      secret: secret
-
 ---
 
 spring:
   profiles:
     active:
-      dev
+      test

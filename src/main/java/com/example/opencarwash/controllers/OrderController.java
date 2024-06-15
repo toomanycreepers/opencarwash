@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -169,5 +170,20 @@ public class OrderController {
         catch(Exception e){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @PostMapping("/dateBoxWithTime")
+    @ResponseBody
+    public ResponseEntity<List<OrderStartEndTimeDTO>> getByBoxDateWithTime(@RequestBody DateBoxDTO dto){
+        // try{
+            List<OrderStartEndTimeDTO> dtos = service.getByDateBoxWithTime(dto);
+            return new ResponseEntity<>(dtos, HttpStatus.OK);
+        // }
+        // catch(NoSuchElementException e){
+        //     return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        // }
+        // catch(IllegalArgumentException | DateTimeParseException e){
+        //     return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        // }
     }
 }

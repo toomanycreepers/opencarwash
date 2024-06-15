@@ -22,13 +22,11 @@ public class TariffController {
 
     @PostMapping
     public ResponseEntity<String> create(@RequestBody TariffCreationDTO dto){
-        try{
+        
             String id = service.addTariff(dto);
             return new ResponseEntity<>(id, HttpStatus.CREATED);
-        }
-        catch(Exception e){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+        
+        
     }
 
     @PutMapping

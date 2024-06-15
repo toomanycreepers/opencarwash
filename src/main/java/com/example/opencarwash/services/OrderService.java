@@ -1,6 +1,7 @@
 package com.example.opencarwash.services;
 
 import com.example.opencarwash.dtos.order.*;
+import com.example.opencarwash.dtos.tariff.CwServiceOptDTO;
 import com.example.opencarwash.dtos.tariff.FullTariffDTO;
 import com.example.opencarwash.entities.Box;
 import com.example.opencarwash.entities.Order;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +42,33 @@ public class OrderService {
         return repo.findById(UUID.fromString(id)).orElseThrow(
                 () -> new NoSuchElementException("Incorrect order id.")
         );
+    }
+
+    public List<OrderStartEndTimeDTO> getByDateBoxWithTime(DateBoxDTO dto) throws
+            IllegalArgumentException,
+            DateTimeParseException,
+            NoSuchElementException{
+        List<OrderWithServicesDTO> orderDtos = getByDateBoxAll(dto);
+        Short timeslot = bService.findById(dto.boxId).getCarwash().getTimeslotLengthMinutes();
+
+        ArrayList<OrderStartEndTimeDTO> result = new ArrayList<OrderStartEndTimeDTO>();
+
+        for(OrderWithServicesDTO orderDto : orderDtos){
+            FullTariffDTO orderFariff = orderDto.fullTariff;
+            Integer orderDurationMinutes = orderFariff.BufferTime.intValue();
+
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
+            LocalDateTime start = LocalDateTime.parse(orderDto.startTime, formatter);
+
+            for(CwServiceOptDTO service : orderFariff.services){
+                orderDurationMinutes += service.duration * timeslot;
+            }
+
+            String endTimeString = start.plusMinutes(orderDurationMinutes).toString();
+            result.add(new OrderStartEndTimeDTO(orderDto.id, orderDto.startTime, endTimeString));
+        }
+
+        return result;
     }
 
     public void create(OrderCreationDTO dto) throws
@@ -166,5 +195,14 @@ public class OrderService {
         else{
             throw new IllegalStatusMutationException();
         }
+    }
+
+    public List<OrderWithServicesDTO> getByDateBoxAll(DateBoxDTO dto) throws
+            IllegalArgumentException,
+            DateTimeParseException{
+        LocalDate date = LocalDate.parse(dto.date);
+        UUID boxId = UUID.fromString(dto.boxId);
+        List<Order> orders = repo.findByBoxAndDate(boxId, date);
+        return OrderMapper.mapToDTOList(orders);
     }
 }
